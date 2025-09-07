@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { Home, UserPlus, Settings, Lock, FileText } from "lucide-react";
+import { FiMoon, FiSun } from "react-icons/fi";
 
 const initialNavItems = [
   {
@@ -31,6 +32,12 @@ const initialNavItems = [
     route: "/files",
     icon: FileText,
     isButton: false,
+  },
+  {
+    label: "Toggle Dark Mode",
+    icon: FiMoon,
+    isButton: true,
+    action: null,
   },
 ];
 

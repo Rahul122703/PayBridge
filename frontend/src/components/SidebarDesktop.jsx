@@ -10,7 +10,8 @@ export default function SidebarDesktop() {
   const location = useLocation();
   const dispatch = useDispatch();
   const collapsed = useSelector((state) => state.ui.collapsed);
-  const items = useSelector((state) => state.ui.navItems);
+  const navItemsFromState = useSelector((state) => state.ui.navItems);
+  const darkMode = useSelector((state) => state.ui.darkMode);
 
   const navItems = [
     {
@@ -19,14 +20,16 @@ export default function SidebarDesktop() {
       action: () => dispatch(toggleCollapse()),
       isButton: true,
     },
-    ...items,
+    ...navItemsFromState,
   ];
 
   return (
     <div
-      className={`hidden md:flex h-screen text-white p-4 flex-col justify-between bg-transparent transition-all duration-300 ${
-        collapsed ? "w-20" : "w-60"
-      }`}>
+      className={`hidden md:flex h-screen p-4 flex-col justify-between transition-all duration-300 border border-none
+        ${collapsed ? "w-20" : "w-60"} 
+        ${
+          darkMode ? "bg-gray-900 text-gray-200" : "bg-transparent text-white"
+        }`}>
       <NavList
         items={navItems}
         pathname={location.pathname}
