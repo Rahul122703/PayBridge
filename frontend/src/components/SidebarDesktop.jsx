@@ -27,9 +27,7 @@ export default function SidebarDesktop() {
     <div
       className={`hidden md:flex h-screen p-4 flex-col justify-between transition-all duration-300 border border-none
         ${collapsed ? "w-20" : "w-60"} 
-        ${
-          darkMode ? "bg-gray-900 text-gray-200" : "bg-transparent text-white"
-        }`}>
+        ${darkMode ? "bg-gray-900 text-gray-200" : "bg-[#7785EE] text-white"}`}>
       <NavList
         items={navItems}
         pathname={location.pathname}
