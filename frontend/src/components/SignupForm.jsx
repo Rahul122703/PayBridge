@@ -13,6 +13,8 @@ const signupSchema = z.object({
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
+const BACKEND_URL = import.meta.env.VITE_API_URL;
+
 const SignupForm = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -26,7 +28,7 @@ const SignupForm = () => {
     if (!result.success) return toast.error(result.error.errors[0].message);
 
     try {
-      await axios.post("http://localhost:8080/auth/signup", data);
+      await axios.post(`${BACKEND_URL}/auth/signup`, data);
       toast.success("Signup successful! Now Login");
       dispatch(setActiveTab("login"));
     } catch (err) {

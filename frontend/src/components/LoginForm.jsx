@@ -6,6 +6,7 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 
 import { login } from "../features/auth/AuthSlice";
+const BACKEND_URL = import.meta.env.VITE_API_URL;
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email"),
@@ -24,7 +25,7 @@ const LoginForm = () => {
     if (!result.success) return toast.error(result.error.errors[0].message);
 
     try {
-      const res = await axios.post("http://localhost:8080/auth/login", data);
+      const res = await axios.post(`${BACKEND_URL}/auth/login`, data);
 
       if (res.data.success) {
         toast.success("Login successful!");
