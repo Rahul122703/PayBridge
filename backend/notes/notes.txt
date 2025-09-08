@@ -15,4 +15,42 @@ commands :
 
 
 SETUP FOR MONGO DB COMPASS:
-1. 
+1. Goto data services and click on connect and then go to drivers and copy the link and paste the link to the compass by creating new database connection 
+
+SETUP TO CONNECTION MONGO DB TO BACKEND EXPERSS:
+1. Make a new .env and paste the url coped from from teh drivers and add the database name after the "....hnwmos.mongodb.net/<databaseName>retryW...." in the link
+2. now use this code snippet:
+
+backend/index.js
+require(`./Models/db`);
+
+const express = require("express");
+const app = express();
+
+require("dotenv").config();
+
+const PORT = process.env.PORT || 8000;
+
+app.listen(PORT, () => {
+  console.log(`Server is running on https://localhost:${PORT}`);
+});
+
+app.get("/ping", (req, res) => {
+  res.send("rahul sharma");
+});
+
+
+backend/Models/db.js
+require(`dotenv`).config();
+const mongoose = require("mongoose");
+const mongo_url = process.env.MONGO_DB_CONNECTION;
+mongoose
+  .connect(mongo_url)
+  .then(() => {
+    console.log("MongoDB connected");
+  })
+  .catch((err) => {
+    console.log(`ERROR: ${err}`);
+  });
+
+
