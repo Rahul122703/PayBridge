@@ -8,6 +8,7 @@ export default function BottomNavMobile() {
   const navItems = useSelector((state) => state.ui.navItems);
   const darkMode = useSelector((state) => state.ui.darkMode);
   const dispatch = useDispatch();
+  const themeColor = useSelector((state) => state.ui.themeColor);
 
   return (
     <div
@@ -15,7 +16,7 @@ export default function BottomNavMobile() {
         ${
           darkMode
             ? "bg-gray-900 border-gray-700 text-gray-200"
-            : "bg-blue-900 border-blue-700 text-white"
+            : `bg-[${themeColor}] border-blue-700 text-white`
         }`}>
       {navItems.map((item, idx) => {
         const isActive = location.pathname === item.route;

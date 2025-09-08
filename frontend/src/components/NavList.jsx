@@ -2,7 +2,7 @@ import NavItem from "./NavItem";
 
 const NavList = ({ items, pathname, collapsed }) => {
   return (
-    <nav className="space-y-2 mt-[4rem]">
+    <nav className="space-y-2 mt-[4rem] border border-none">
       {items.map((item, idx) => (
         <NavItem
           key={idx}

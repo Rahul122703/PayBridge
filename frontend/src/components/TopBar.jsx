@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import { UserCircle, ChevronDown } from "lucide-react";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
-
 import webLogo from "../assets/weblogo.png";
 
 /* --------------------- DROPDOWN MENU --------------------- */
@@ -43,11 +42,13 @@ const DropdownMenu = ({ dropdownRef }) => {
 /* --------------------- MOBILE TOPBAR --------------------- */
 const TopbarMobile = ({ toggleDropdown, dropdownOpen, dropdownRef }) => {
   const darkMode = useSelector((state) => state.ui.darkMode);
-
+  const themeColor = useSelector((state) => state.ui.themeColor);
   return (
     <div
       className={`w-full transition-all duration-300 px-4 py-3 flex justify-between items-center sticky top-0 md:hidden z-[200] 
-        ${darkMode ? "bg-gray-900 text-white" : "bg-[#7785EE] text-white"}`}>
+        ${
+          darkMode ? "bg-gray-900 text-white" : `bg-[${themeColor}] text-white`
+        }`}>
       <div className="text-xl font-bold tracking-wide">
         <Link to="/">PayBridge</Link>
       </div>
@@ -68,11 +69,14 @@ const TopbarMobile = ({ toggleDropdown, dropdownOpen, dropdownRef }) => {
 /* --------------------- DESKTOP TOPBAR --------------------- */
 const TopbarDesktop = ({ toggleDropdown, dropdownOpen, dropdownRef }) => {
   const darkMode = useSelector((state) => state.ui.darkMode);
+  const themeColor = useSelector((state) => state.ui.themeColor);
 
   return (
     <div
       className={`w-full transition-all duration-300 px-4 py-3  justify-between items-center sticky top-0 hidden md:flex
-        ${darkMode ? "bg-gray-900 text-white" : "bg-[#7785EE] text-white"}`}>
+        ${
+          darkMode ? "bg-gray-900 text-white" : `bg-[${themeColor}] text-white`
+        }`}>
       <div className="text-xl font-bold tracking-wide border border-none flex flex-row justify-between items-center w-full max-w-[10rem]">
         <img src={webLogo} alt="WebLogo" className="h-[2.5rem] w-auto" />
         <Link to="/">PayBridge</Link>

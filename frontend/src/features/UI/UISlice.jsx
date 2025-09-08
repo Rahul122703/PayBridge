@@ -1,6 +1,8 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { Home, UserPlus, Settings, Lock, FileText } from "lucide-react";
+import { use } from "react";
 import { FiMoon, FiSun } from "react-icons/fi";
+import { useSelector } from "react-redux";
 
 const initialNavItems = [
   {
@@ -47,6 +49,7 @@ const uiSlice = createSlice({
     darkMode: false,
     collapsed: false,
     navItems: initialNavItems,
+    themeColor: "#1E1B44",
   },
   reducers: {
     toggleDarkMode: (state) => {

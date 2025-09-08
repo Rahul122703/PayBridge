@@ -20,15 +20,12 @@ const NavItem = ({
   const isActive = !!match;
 
   const baseClasses =
-    "flex items-center gap-3 py-3 px-4 rounded-xl transition-colors duration-300";
+    "flex items-center gap-3 py-3 px-4 rounded-l-xl transition-colors duration-300";
 
-  const activeClasses = darkMode
-    ? "bg-gradient-to-r from-gray-700 to-gray-600 text-white shadow-lg"
-    : "bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-lg";
-
-  const inactiveClasses = darkMode
-    ? "hover:bg-gray-700 text-gray-300"
-    : "hover:bg-blue-800 text-gray-300";
+  // Colors tuned for parent bg #1E1B44
+  const activeClasses = "bg-white text-[#7C6BF6] shadow-md"; // highlighted background
+  const inactiveClasses =
+    "text-[#7C6BF6] hover:bg-[#2D285A] hover:text-[#7C6BF6]"; // transparent until hover
 
   // If it's the dark mode toggle button
   if (isButton && label.toLowerCase().includes("dark")) {
@@ -37,8 +34,8 @@ const NavItem = ({
         onClick={() => dispatch(toggleDarkMode())}
         className={`w-full ${baseClasses} ${
           darkMode
-            ? "bg-gray-700 text-white hover:bg-gray-600"
-            : "bg-gray-300 text-gray-900 hover:bg-gray-400"
+            ? "bg-[#2D285A] text-[#7C6BF6]"
+            : "bg-transparent text-[#7C6BF6] hover:bg-[#2D285A]"
         } flex items-center gap-3`}>
         {darkMode ? (
           <FiSun className="w-5 h-5" />
@@ -50,7 +47,7 @@ const NavItem = ({
     );
   }
 
-  // Normal button or link
+  // Normal button (not link)
   if (isButton) {
     return (
       <button
@@ -62,6 +59,7 @@ const NavItem = ({
     );
   }
 
+  // Normal link
   return (
     <Link
       to={route}
