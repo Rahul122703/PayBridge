@@ -7,7 +7,14 @@ import {
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 
-import { HomePage, AboutPage, LoginSignUpPage, FirstPage } from "./pages";
+import {
+  HomePage,
+  AboutPage,
+  LoginSignUpPage,
+  FirstPage,
+  PageNotFound,
+} from "./pages";
+
 import {
   Sidebar,
   TopBar,
@@ -15,7 +22,6 @@ import {
   NavbarComponent,
 } from "./components";
 
-// Layout with Sidebar + TopBar
 function Layout({ children }) {
   return (
     <div className="flex min-h-screen bg-white dark:bg-gray-900 dark:text-white transition">
@@ -30,7 +36,6 @@ function Layout({ children }) {
   );
 }
 
-// Layout with Navbar + Footer (for "/")
 function LandingLayout({ children }) {
   return (
     <div className="flex flex-col min-h-screen">
@@ -44,9 +49,7 @@ function LandingLayout({ children }) {
 function AppContent() {
   const location = useLocation();
   const darkMode = useSelector((state) => state.ui.darkMode);
-  const themeColor = useSelector((state) => state.ui.themeColor);
 
-  // Dark mode toggle
   useEffect(() => {
     if (darkMode) {
       document.documentElement.classList.add("dark");
@@ -55,35 +58,40 @@ function AppContent() {
     }
   }, [darkMode]);
 
-  // "/" route → Landing layout
-  if (location.pathname === "/") {
+  if (
+    location.pathname === "/" ||
+    location.pathname === "/auth" ||
+    location.pathname === "/about"
+  ) {
     return (
       <LandingLayout>
-        <FirstPage />
-      </LandingLayout>
-    );
-  } else if (location.pathname === "/auth") {
-    return (
-      <LandingLayout>
-        <LoginSignUpPage />
-      </LandingLayout>
-    );
-  } else if (location.pathname === "/about") {
-    return (
-      <LandingLayout>
-        <AboutPage />
+        {location.pathname === "/" && <FirstPage />}
+        {location.pathname === "/auth" && <LoginSignUpPage />}
+        {location.pathname === "/about" && <AboutPage />}
       </LandingLayout>
     );
   }
 
-  // Other routes → Sidebar + TopBar layout
   return (
-    <Layout>
-      <Routes>
-        <Route path="/home" element={<HomePage />} />
-        <Route path="/about" element={<AboutPage />} />
-      </Routes>
-    </Layout>
+    <Routes>
+      <Route
+        path="/home"
+        element={
+          <Layout>
+            <HomePage />
+          </Layout>
+        }
+      />
+      <Route
+        path="/about"
+        element={
+          <Layout>
+            <AboutPage />
+          </Layout>
+        }
+      />
+      <Route path="*" element={<PageNotFound />} />
+    </Routes>
   );
 }
 
