@@ -1,0 +1,18 @@
+1. make account mongo db
+2. choose an oraganization
+3. create a new project in mongodb
+4. create cluster  and choose free version with AWS provider with default region
+5. copy the username and password and if possible add current IP address of the pc
+6. now create a new database and create collection 
+7. now this database is created on cloud now to connect with shell to run on local pc do this following:
+	1.dowload and install this https://mongodb.com/try/download/shell (install the msi)
+	2. type "mongosh" in cmd to check installation of mongodb
+	3. now go to database in mongodb and go to Data Services section then click on connect -> shell -> copy paste the link in cmd and type the password earlier copied in step 5 above
+commands :
+1. show dbs
+2. use db_name
+3. show collections
+
+
+SETUP FOR MONGO DB COMPASS:
+1. 
