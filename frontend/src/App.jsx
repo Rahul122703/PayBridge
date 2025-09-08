@@ -7,6 +7,8 @@ import {
 import { useSelector } from "react-redux";
 import { useEffect } from "react";
 
+import { Toaster } from "react-hot-toast";
+
 import {
   HomePage,
   AboutPage,
@@ -99,6 +101,7 @@ function App() {
   return (
     <Router>
       <AppContent />
+      <Toaster />
     </Router>
   );
 }

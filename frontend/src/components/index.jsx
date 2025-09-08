@@ -9,6 +9,9 @@ import Sidebar from "./Sidebar";
 import SidebarDesktop from "./SidebarDesktop";
 import HeroSection from "./HeroSection";
 import NavItem from "./NavItem";
+import Tabs from "./Tabs";
+import LoginForm from "./LoginForm";
+import SignupForm from "./SignupForm";
 
 export {
   NavbarComponent,
@@ -22,4 +25,7 @@ export {
   TopBar,
   NavList,
   NavItem,
+  Tabs,
+  LoginForm,
+  SignupForm,
 };
