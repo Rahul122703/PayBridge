@@ -33,7 +33,8 @@ export default function SidebarDesktop() {
           darkMode
             ? "bg-gray-900 text-gray-200"
             : ` bg-[${themeColor}] text-white`
-        }`}>
+        }`}
+      style={!darkMode ? { backgroundColor: themeColor } : {}}>
       <NavList
         items={navItems}
         pathname={location.pathname}

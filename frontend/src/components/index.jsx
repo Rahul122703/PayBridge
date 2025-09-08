@@ -7,7 +7,9 @@ import LogoutButton from "./LogoutButton";
 import NavList from "./NavList";
 import Sidebar from "./Sidebar";
 import SidebarDesktop from "./SidebarDesktop";
+import HeroSection from "./HeroSection";
 import NavItem from "./NavItem";
+
 export {
   NavbarComponent,
   SidebarDesktop,
@@ -16,6 +18,7 @@ export {
   DarkModeToggleComponent,
   LogoutButton,
   Sidebar,
+  HeroSection,
   TopBar,
   NavList,
   NavItem,

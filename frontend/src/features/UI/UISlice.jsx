@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 const initialNavItems = [
   {
     label: "Home",
-    route: "/",
+    route: "/home",
     icon: Home,
     isButton: false,
   },
@@ -49,7 +49,7 @@ const uiSlice = createSlice({
     darkMode: false,
     collapsed: false,
     navItems: initialNavItems,
-    themeColor: "#1E1B44",
+    themeColor: "#1d1b44",
   },
   reducers: {
     toggleDarkMode: (state) => {

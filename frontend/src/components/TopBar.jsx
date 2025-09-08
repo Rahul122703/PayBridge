@@ -46,9 +46,8 @@ const TopbarMobile = ({ toggleDropdown, dropdownOpen, dropdownRef }) => {
   return (
     <div
       className={`w-full transition-all duration-300 px-4 py-3 flex justify-between items-center sticky top-0 md:hidden z-[200] 
-        ${
-          darkMode ? "bg-gray-900 text-white" : `bg-[${themeColor}] text-white`
-        }`}>
+        ${darkMode ? "bg-gray-900 text-white" : ` text-white`}`}
+      style={!darkMode ? { backgroundColor: themeColor } : {}}>
       <div className="text-xl font-bold tracking-wide">
         <Link to="/">PayBridge</Link>
       </div>
@@ -74,9 +73,8 @@ const TopbarDesktop = ({ toggleDropdown, dropdownOpen, dropdownRef }) => {
   return (
     <div
       className={`w-full transition-all duration-300 px-4 py-3  justify-between items-center sticky top-0 hidden md:flex
-        ${
-          darkMode ? "bg-gray-900 text-white" : `bg-[${themeColor}] text-white`
-        }`}>
+        ${darkMode ? "bg-gray-900 text-white" : ` text-white`}`}
+      style={!darkMode ? { backgroundColor: themeColor } : {}}>
       <div className="text-xl font-bold tracking-wide border border-none flex flex-row justify-between items-center w-full max-w-[10rem]">
         <img src={webLogo} alt="WebLogo" className="h-[2.5rem] w-auto" />
         <Link to="/">PayBridge</Link>

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
-const LoginSignUpPage: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<"login" | "signup">("login");
+const LoginSignUpPage = () => {
+  const [activeTab, setActiveTab] = useState("login");
 
   return (
     <div className="h-[80vh]  flex items-center justify-center bg-gray-100 dark:bg-gray-900 transition-colors duration-300 overflow-hidden">

@@ -1,4 +1,4 @@
-const Hero = () => {
+const AboutPage = () => {
   return (
     <section className="w-full bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300">
       <div className="max-w-6xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-8 px-6 py-16">
@@ -16,7 +16,7 @@ const Hero = () => {
         <div className="flex-1">
           <img
             src="https://miro.medium.com/v2/resize:fit:1400/1*v2s19jk0rs5OfwWcB9j44w.png"
-            alt="Hero Illustration"
+            alt="AboutPage Illustration"
             className="w-full max-w-md mx-auto"
           />
         </div>
@@ -25,4 +25,4 @@ const Hero = () => {
   );
 };
 
-export default Hero;
+export default AboutPage;
