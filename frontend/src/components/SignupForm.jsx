@@ -4,6 +4,9 @@ import toast from "react-hot-toast";
 
 import axios from "axios";
 
+import { useDispatch } from "react-redux";
+import { setActiveTab } from "../features/auth/AuthSlice";
+
 const signupSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email"),
@@ -14,7 +17,7 @@ const SignupForm = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const dispatch = useDispatch();
   const handleSignup = async (e) => {
     e.preventDefault();
     const data = { name, email, password };
@@ -24,7 +27,8 @@ const SignupForm = () => {
 
     try {
       await axios.post("http://localhost:8080/auth/signup", data);
-      toast.success("Signup successful!");
+      toast.success("Signup successful! Now Login");
+      dispatch(setActiveTab("login"));
     } catch (err) {
       toast.error(err.response?.data?.message || "Signup failed");
     }
