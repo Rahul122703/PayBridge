@@ -6,8 +6,8 @@ const helmet = require("helmet");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 
-const AuthRouter = require("./routes/AuthRouter");
-const PaymentRouter = require("./routes/PaymentRouter");
+const AuthRouter = require("./Routes/AuthRouter");
+const PaymentRouter = require("./Routes/PaymentRouter");
 const TransactionRouter = require("./Routes/TransactionRouter");
 
 const app = express();
