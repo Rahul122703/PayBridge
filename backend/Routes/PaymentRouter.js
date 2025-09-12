@@ -81,6 +81,10 @@ router.post("/create-payment", verifyToken, async (req, res) => {
  * POST /payments/webhook
  * Public endpoint that receives gateway callbacks (server-to-server JSON payload)
  */
+/**
+ * POST /payments/webhook
+ * Public endpoint that receives gateway callbacks (server-to-server JSON payload)
+ */
 router.post("/webhook", async (req, res) => {
   try {
     const payload = req.body;
@@ -125,13 +129,31 @@ router.post("/webhook", async (req, res) => {
 /**
  * GET /payments/callback
  * Public endpoint for browser redirection after payment
+ * Stores the transaction result in DB and shows user-friendly page
  */
 router.get("/callback", async (req, res) => {
   try {
     const { EdvironCollectRequestId, status, reason } = req.query;
 
-    // Optionally update DB here as well (not required if webhook already updates)
-    // Just show a user-friendly response
+    if (!EdvironCollectRequestId) {
+      return res.status(400).send("Missing EdvironCollectRequestId");
+    }
+
+    // Update DB (minimal info — webhook still provides richer data)
+    const update = {
+      collect_id: EdvironCollectRequestId,
+      status: status || "unknown",
+      error_message: reason || null,
+      updatedAt: new Date(),
+    };
+
+    await OrderStatus.findOneAndUpdate(
+      { collect_id: EdvironCollectRequestId },
+      update,
+      { upsert: true, new: true }
+    );
+
+    // Show user-friendly page
     return res.send(`
       <html>
         <head><title>Payment Status</title></head>
@@ -143,6 +165,7 @@ router.get("/callback", async (req, res) => {
       </html>
     `);
   } catch (err) {
+    console.error("callback error:", err);
     return res.status(500).send("Error displaying callback page");
   }
 });
