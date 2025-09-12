@@ -6,7 +6,7 @@ const verifyToken = require("../Middlewares/verifyToken");
 const Order = require("../Models/Order");
 const OrderStatus = require("../Models/OrderStatus");
 const WebhookLog = require("../Models/WebhookLog");
-//
+
 const router = express.Router();
 
 /**
@@ -18,10 +18,11 @@ router.post("/create-payment", verifyToken, async (req, res) => {
   try {
     const { school_id, amount, callback_url, trustee_id, student_info } =
       req.body;
-    if (!school_id || !amount || !callback_url)
+    if (!school_id || !amount || !callback_url) {
       return res
         .status(400)
         .json({ message: "school_id, amount and callback_url required" });
+    }
 
     // Build payload exactly as docs say (strings)
     const payload = {
@@ -51,15 +52,9 @@ router.post("/create-payment", verifyToken, async (req, res) => {
     const data = response.data;
 
     // Save order locally with returned collect_request_id
-    const collectId =
-      data.collect_request_id ||
-      data.collect_request_id ||
-      data.collect_request_id;
+    const collectId = data.collect_request_id;
     const paymentUrl =
-      data.Collect_request_url ||
-      data.collect_request_url ||
-      data.payment_url ||
-      data.Collect_request_url;
+      data.Collect_request_url || data.collect_request_url || data.payment_url;
 
     const newOrder = new Order({
       collect_id: collectId,
@@ -84,7 +79,7 @@ router.post("/create-payment", verifyToken, async (req, res) => {
 
 /**
  * POST /payments/webhook
- * Public endpoint that receives gateway callbacks
+ * Public endpoint that receives gateway callbacks (server-to-server JSON payload)
  */
 router.post("/webhook", async (req, res) => {
   try {
@@ -104,7 +99,7 @@ router.post("/webhook", async (req, res) => {
       order_amount: info.order_amount,
       transaction_amount: info.transaction_amount,
       payment_mode: info.payment_mode,
-      payment_details: info.payemnt_details || info.payment_details,
+      payment_details: info.payment_details || info.payemnt_details,
       bank_reference: info.bank_reference,
       payment_message: info.Payment_message || info.payment_message,
       status: info.status,
@@ -128,6 +123,31 @@ router.post("/webhook", async (req, res) => {
 });
 
 /**
+ * GET /payments/callback
+ * Public endpoint for browser redirection after payment
+ */
+router.get("/callback", async (req, res) => {
+  try {
+    const { EdvironCollectRequestId, status, reason } = req.query;
+
+    // Optionally update DB here as well (not required if webhook already updates)
+    // Just show a user-friendly response
+    return res.send(`
+      <html>
+        <head><title>Payment Status</title></head>
+        <body style="font-family: sans-serif; text-align: center; margin-top: 50px;">
+          <h1>Payment ${status}</h1>
+          <p>Order ID: ${EdvironCollectRequestId}</p>
+          <p>${reason || ""}</p>
+        </body>
+      </html>
+    `);
+  } catch (err) {
+    return res.status(500).send("Error displaying callback page");
+  }
+});
+
+/**
  * GET /payments/transaction-status/:collect_id
  * Protected route to query edviron status API
  */
@@ -145,9 +165,8 @@ router.get("/transaction-status/:collect_id", verifyToken, async (req, res) => {
     const sign = jwt.sign(payload, process.env.PG_SECRET);
 
     const url = `https://dev-vanilla.edviron.com/erp/collect-request/${collect_id}?school_id=${process.env.SCHOOL_ID}&sign=${sign}`;
-    console.log("code is here 2");
     const response = await axios.get(url, { timeout: 10000 });
-    console.log("code is here 2");
+
     return res.json(response.data);
   } catch (err) {
     console.error(
