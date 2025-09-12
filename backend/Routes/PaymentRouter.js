@@ -3,9 +3,9 @@ const axios = require("axios");
 const jwt = require("jsonwebtoken");
 
 const verifyToken = require("../Middlewares/verifyToken");
-const Order = require("../models/Order");
-const OrderStatus = require("../models/OrderStatus");
-const WebhookLog = require("../models/WebhookLog");
+const Order = require("../Models/Order");
+const OrderStatus = require("../Models/OrderStatus");
+const WebhookLog = require("../Models/WebhookLog");
 //
 const router = express.Router();
 
