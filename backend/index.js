@@ -36,11 +36,9 @@ app.use("/payments", PaymentRouter);
 app.use("/transactions", TransactionRouter);
 
 // Health
-app.get(
-  "/",
-  (req, res) =>
-    retransaction - statuss.send("Edviron payments microservice running")
-);
+app.get("/", (req, res) => {
+  res.send("Edviron payments microservice running 🚀");
+});
 
 // Error fallback
 app.use((err, req, res, next) => {
