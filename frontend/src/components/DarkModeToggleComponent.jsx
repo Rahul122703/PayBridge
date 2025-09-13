@@ -21,9 +21,7 @@ const DarkModeToggleComponent = () => {
       ) : (
         <FiMoon className="text-lg" />
       )}
-      <span className="hidden sm:inline">
-        {darkMode ? "Light Mode" : "Dark Mode"}
-      </span>
+      <span className="hidden sm:inline"></span>
     </button>
   );
 };

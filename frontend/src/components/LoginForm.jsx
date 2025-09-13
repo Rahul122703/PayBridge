@@ -16,7 +16,9 @@ const loginSchema = z.object({
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false); // ✅ loader state
   const dispatch = useDispatch();
+
   const handleLogin = async (e) => {
     e.preventDefault();
     const data = { email, password };
@@ -25,6 +27,7 @@ const LoginForm = () => {
     if (!result.success) return toast.error(result.error.errors[0].message);
 
     try {
+      setLoading(true); // ✅ start loader
       const res = await axios.post(`${BACKEND_URL}/auth/login`, data);
 
       if (res.data.success) {
@@ -43,6 +46,8 @@ const LoginForm = () => {
     } catch (err) {
       console.log(err);
       toast.error(err.response?.data?.message || "Login failed");
+    } finally {
+      setLoading(false); // ✅ stop loader
     }
   };
 
@@ -74,8 +79,36 @@ const LoginForm = () => {
       </div>
       <button
         type="submit"
-        className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-md transition-colors duration-200">
-        Login
+        disabled={loading}
+        className={`w-full py-2 px-4 rounded-lg shadow-md transition-colors duration-200 ${
+          loading
+            ? "bg-blue-400 cursor-not-allowed"
+            : "bg-blue-600 hover:bg-blue-700 text-white"
+        }`}>
+        {loading ? (
+          <div className="flex items-center justify-center gap-2">
+            <svg
+              className="animate-spin h-5 w-5 text-white"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24">
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"></circle>
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 000 16v-4l-3 3 3 3v-4a8 8 0 01-8-8z"></path>
+            </svg>
+            Logging in...
+          </div>
+        ) : (
+          "Login"
+        )}
       </button>
     </form>
   );

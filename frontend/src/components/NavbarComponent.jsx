@@ -30,6 +30,11 @@ const NavbarComponent = () => {
             className="hover:text-blue-600 dark:hover:text-blue-400 transition">
             About
           </Link>
+          <Link
+            to="/auth"
+            className="hover:text-blue-600 dark:hover:text-blue-400 transition">
+            Authenticate
+          </Link>
 
           <DarkModeToggleComponent />
         </div>
@@ -48,7 +53,11 @@ const NavbarComponent = () => {
             className="hover:text-blue-600 dark:hover:text-blue-400 transition">
             About
           </Link>
-
+          <Link
+            to="/auth"
+            className="hover:text-blue-600 dark:hover:text-blue-400 transition">
+            Authenticate
+          </Link>
           <DarkModeToggleComponent />
         </div>
       )}
