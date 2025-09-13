@@ -38,6 +38,18 @@ ALL THE BACKEND API'S ARE READY USE POSTMAN TO TEST ALL THE APIS
 
 # 🎨 Frontend Features
 
+# 📱 Progressive Web App (PWA)
+
+This website is also a **Progressive Web App (PWA)** 🎉  
+You can **install it** on desktop or mobile just like a native app:
+
+- On Chrome/Edge → Click the **install icon** in the address bar.
+- On iOS Safari → Tap **Share → Add to Home Screen**.
+
+✅ Works offline with caching  
+✅ Launches in standalone mode  
+✅ Feels like a native app
+
 ## 👨‍🎓 School Login
 
 test credentials
