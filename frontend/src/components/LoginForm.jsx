@@ -6,7 +6,8 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import { login } from "../features/auth/AuthSlice";
-const BACKEND_URL = import.meta.env.VITE_API_URL;
+// const BACKEND_URL = import.meta.env.VITE_API_URL; // !!!!!!!!!! WARNING : UNCOMMENT THIS AND THEN RUN WHEN RUNNING ON LOCALHOST !!!!!!!!!!!
+const BACKEND_URL = "https://paybridge-39eo.onrender.com"; // !!!!!!!!!! WARNING : COMMENT THIS AND THEN RUN WHEN NOT RUNNING ON LOCALHOST !!!!!!!!!!!
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email"),

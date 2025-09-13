@@ -15,7 +15,8 @@ const signupSchema = z.object({
   }),
 });
 
-const BACKEND_URL = import.meta.env.VITE_API_URL;
+// const BACKEND_URL = import.meta.env.VITE_API_URL; // !!!!!!!!!! WARNING : UNCOMMENT THIS AND THEN RUN WHEN RUNNING ON LOCALHOST !!!!!!!!!!!
+const BACKEND_URL = "https://paybridge-39eo.onrender.com"; // !!!!!!!!!! WARNING : COMMENT THIS AND THEN RUN WHEN NOT RUNNING ON LOCALHOST !!!!!!!!!!!
 
 const SignupForm = () => {
   const [name, setName] = useState("");
