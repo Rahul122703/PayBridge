@@ -10,7 +10,7 @@ export const DashboardLayout = () => {
 
   return (
     <div
-      className="flex min-h-screen dark:bg-gray-900 dark:text-white transition-colors duration-300"
+      className="flex h-screen dark:bg-gray-900 dark:text-white transition-colors duration-300"
       style={!darkMode ? { backgroundColor: themeColor || "#08088F" } : {}}>
       <Sidebar />
       <div className="flex flex-col flex-1">

@@ -1,7 +1,7 @@
 import React from "react";
 import { Routes, Route } from "react-router-dom";
 import { DashboardLayout } from "./layouts/DashboardLayout";
-import { HomePage, PageNotFound } from "./src/pages/index";
+import { HomePage, PageNotFound, TransactionPage } from "./src/pages/index";
 
 const DashboardNotFound = () => (
   <div className="flex items-center justify-center h-full">
@@ -14,6 +14,7 @@ const AdminRoutes = () => (
     <Route path="/" element={<DashboardLayout />}>
       <Route path="home" element={<HomePage />} />
       <Route path="settings" element={<h1>Admin Settings</h1>} />
+      <Route path="transactions" element={<TransactionPage />} />
       <Route path="*" element={<DashboardNotFound />} />
     </Route>
   </Routes>

@@ -61,7 +61,6 @@ const LoginForm = () => {
         navigate("/home", { replace: true });
       }
     } catch (err) {
-      console.log(err);
       toast.error(err.response?.data?.message || "Login failed");
     } finally {
       setLoading(false);

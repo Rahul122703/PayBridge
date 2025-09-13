@@ -12,6 +12,7 @@ import NavItem from "./NavItem";
 import Tabs from "./Tabs";
 import LoginForm from "./LoginForm";
 import SignupForm from "./SignupForm";
+import UsersTable from "./usersTable";
 
 export {
   NavbarComponent,
@@ -28,4 +29,5 @@ export {
   Tabs,
   LoginForm,
   SignupForm,
+  UsersTable,
 };

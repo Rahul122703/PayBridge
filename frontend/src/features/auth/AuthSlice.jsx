@@ -55,6 +55,7 @@ export default authSlice.reducer;
 
 // ✅ Selectors for accessing state
 export const selectUser = (state) => state.auth.user;
+export const selectToken = (state) => state.auth.user.token;
 export const selectIsLoggedIn = (state) => state.auth.isLoggedIn;
 export const selectRole = (state) => state.auth.role;
 export const selectActiveTab = (state) => state.auth.activeTab;

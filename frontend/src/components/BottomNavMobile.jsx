@@ -16,13 +16,14 @@ export default function BottomNavMobile() {
         ${
           darkMode
             ? "bg-gray-900 border-gray-700 text-gray-200"
-            : `bg-[${themeColor}] border-blue-700 text-white`
-        }`}>
+            : "border-blue-700 text-white"
+        }`}
+      style={!darkMode ? { backgroundColor: themeColor } : {}}>
       {navItems.map((item, idx) => {
         const isActive = location.pathname === item.route;
         const Icon = item.icon;
 
-        // Check if this is the dark mode toggle button
+        // Dark mode toggle button
         if (item.isButton && item.label.toLowerCase().includes("dark")) {
           return (
             <button
@@ -32,13 +33,9 @@ export default function BottomNavMobile() {
                 ${
                   darkMode
                     ? "text-gray-400 hover:text-gray-200"
-                    : "text-blue-300 hover:text-white"
+                    : "text-blue-200 hover:text-white"
                 }`}>
-              {darkMode ? (
-                <Icon className="w-5 h-5" />
-              ) : (
-                <Icon className="w-5 h-5" />
-              )}
+              <Icon className="w-5 h-5" />
               <span className="text-[10px]">{item.label}</span>
             </button>
           );
@@ -52,12 +49,10 @@ export default function BottomNavMobile() {
             className={`flex flex-col items-center text-xs gap-1 min-w-[4rem] transition-colors
               ${
                 isActive
-                  ? darkMode
-                    ? "text-white"
-                    : "text-white"
+                  ? "text-white"
                   : darkMode
                   ? "text-gray-400 hover:text-gray-200"
-                  : "text-blue-300 hover:text-white"
+                  : "text-blue-200 hover:text-white"
               }`}>
             <Icon className="w-5 h-5" />
             <span className="text-[10px]">{item.label}</span>

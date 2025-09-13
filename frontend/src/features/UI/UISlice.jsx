@@ -1,6 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { Home, UserPlus, Settings, Lock, FileText } from "lucide-react";
 import { FiMoon, FiSun } from "react-icons/fi";
+import { FaExchangeAlt } from "react-icons/fa"; // transaction icon
 
 const initialNavItems = [
   {
@@ -10,34 +11,16 @@ const initialNavItems = [
     isButton: false,
   },
   {
-    label: "Add User",
-    route: "/add-user",
-    icon: UserPlus,
-    isButton: false,
-  },
-  {
-    label: "Settings",
-    route: "/settings",
-    icon: Settings,
-    isButton: false,
-  },
-  {
-    label: "Lock",
-    route: "/lock",
-    icon: Lock,
-    isButton: false,
-  },
-  {
-    label: "Files",
-    route: "/files",
-    icon: FileText,
+    label: "Transactions",
+    route: "/transactions",
+    icon: FaExchangeAlt,
     isButton: false,
   },
   {
     label: "Toggle Dark Mode",
     icon: FiMoon,
     isButton: true,
-    action: null, // You can assign this dynamically in the component
+    action: null, // will be set in component
   },
 ];
 
