@@ -19,7 +19,7 @@ const App = () => {
   const role = useSelector(selectRole);
   const darkMode = useSelector(selectDarkMode);
 
-  // ✅ Add or remove Tailwind dark class based on Redux state
+  // ✅ Add or remove Tailwind dark class based on Redux stat
   useEffect(() => {
     if (darkMode) {
       document.documentElement.classList.add("dark");
