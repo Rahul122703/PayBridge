@@ -82,7 +82,26 @@ password: rahul123
 
 # 🖼 Screenshots
 
-(screenshots/1pc.png)
+## 💻 PC Screenshots
+
+- ![1pc](screenshots/1pc.png)
+- ![2pc](screenshots/2pc.png)
+- ![3pc](screenshots/3pc.png)
+
+## 📱 Phone Screenshots
+
+- ![1phone](screenshots/1phone.png)
+- ![2phone](screenshots/2phone.png)
+
+## 💵 Payment Screenshots
+
+- ![payment1](screenshots/payment1.png)
+- ![payment2](screenshots/payment2.png)
+- ![payment3](screenshots/payment3.png)
+
+## 📝 Postman Screenshots
+
+- ![postman1](screenshots/postman1.png)
 
 # ⚙ Environment Setup
 
