@@ -1,0 +1,711 @@
+AuthContollers.js
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const { UserModel } = require("../Models/User");
+
+// Signup Controller
+const signup = async (req, res) => {
+  try {
+    const { name, email, password, role } = req.body;
+
+    // check if user already exists
+    const user = await UserModel.findOne({ email });
+    if (user) {
+      return res.status(409).json({
+        message: "User already exists, you can't signup again",
+        success: false,
+      });
+    }
+
+    // hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // create new user
+    const newUser = new UserModel({
+      name,
+      email,
+      password: hashedPassword,
+      role: role || "school", // default role if not given
+    });
+    await newUser.save();
+
+    res.status(201).json({ message: "Signup successful", success: true });
+  } catch (err) {
+    res.status(500).json({
+      message: `Internal Server Error: ${err}`,
+      success: false,
+    });
+  }
+};
+
+// Login Controller
+const login = async (req, res) => {
+  const errorMessage = `Auth failed as email or password is wrong`;
+
+  try {
+    const { email, password } = req.body;
+
+    // check if user exists
+    const user = await UserModel.findOne({ email });
+    if (!user) {
+      return res.status(403).json({
+        message: errorMessage,
+        success: false,
+      });
+    }
+
+    // check password
+    const isPasswordEqual = await bcrypt.compare(password, user.password);
+    if (!isPasswordEqual) {
+      return res.status(403).json({ message: errorMessage, success: false });
+    }
+
+    // generate JWT with role also included
+    const jwtToken = jwt.sign(
+      { email: user.email, id: user._id, role: user.role },
+      process.env.JWT_SECRET,
+      { expiresIn: "24h" }
+    );
+
+    res.status(200).json({
+      message: "Login successful",
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      jwtToken,
+      success: true,
+    });
+  } catch (err) {
+    res.status(500).json({
+      message: `Internal Server Error: ${err}`,
+      success: false,
+    });
+  }
+};
+
+module.exports = { signup, login };
+
+auth.js
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
+
+const ensureAuthenticated = (req, res, next) => {
+  console.log("------LOGGED IN USER DETAILS------\n", req.user);
+
+  const auth = req.headers["authorization"];
+  if (!auth) {
+    return res
+      .status(403)
+      .json({ message: "Unauthorized, JWT tsken is required" });
+  }
+  try {
+    const decoded = jwt.verify(auth, process.env.JWT_SECRET);
+    req.user = decoded;
+    next();
+  } catch (error) {
+    return res
+      .status(403)
+      .json({ message: "The JWT token is either wrong or expired" });
+  }
+};
+
+module.exports = ensureAuthenticated;
+
+
+authValidation.js
+const Joi = require("joi");
+
+const signupValidation = (req, res, next) => {
+  const schema = Joi.object({
+    name: Joi.string().min(3).max(100).required(),
+    email: Joi.string().email().required(),
+    password: Joi.string().min(4).max(10).required(),
+    role: Joi.string().valid("school", "admin").default("school"),
+  });
+
+  const { error } = schema.validate(req.body);
+  if (error) {
+    return res.status(400).json({ message: "Bad Request", error });
+  }
+  next();
+};
+
+const loginValidation = (req, res, next) => {
+  const schema = Joi.object({
+    email: Joi.string().email().required(),
+    password: Joi.string().min(4).max(10).required(),
+  });
+
+  const { error } = schema.validate(req.body);
+  if (error) {
+    return res.status(400).json({ message: "Bad Request", error });
+  }
+  next();
+};
+
+module.exports = {
+  signupValidation,
+  loginValidation,
+};
+
+
+vetifyToken.js
+const jwt = require("jsonwebtoken");
+
+module.exports = function (req, res, next) {
+  const authHeader = req.headers.authorization;
+  if (!authHeader)
+    return res
+      .status(401)
+      .json({ message: "Authorization header missing or malformed" });
+
+  const token = authHeader.split(" ")[1];
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded;
+    next();
+  } catch (err) {
+    return res
+      .status(401)
+      .json({ message: "Invalid or expired token", error: err.message });
+  }
+};
+
+
+db.js
+require(`dotenv`).config();
+const mongoose = require("mongoose");
+const mongo_url = process.env.MONGO_DB_CONNECTION;
+mongoose
+  .connect(mongo_url)
+  .then(() => {
+    console.log("MongoDB connected");
+  })
+  .catch((err) => {
+    console.log(`ERROR: ${err}`);
+  });
+
+
+order.js
+
+const mongoose = require("mongoose");
+
+const OrderSchema = new mongoose.Schema({
+  collect_id: { type: String, index: true }, // gateway collect_request_id (string)
+  school_id: { type: String, index: true, required: true },
+  trustee_id: { type: String },
+  student_info: {
+    name: String,
+    id: String,
+    email: String,
+  },
+  gateway_name: { type: String },
+  order_amount: { type: Number },
+  createdAt: { type: Date, default: Date.now },
+});
+
+module.exports = mongoose.model("Order", OrderSchema);
+
+
+orderstatus.js
+
+const mongoose = require("mongoose");
+
+const OrderStatusSchema = new mongoose.Schema({
+  collect_id: { type: String, index: true, required: true }, // matches Order.collect_id
+  order_amount: Number,
+  transaction_amount: Number,
+  payment_mode: String,
+  payment_details: String,
+  bank_reference: String,
+  payment_message: String,
+  status: String,
+  error_message: String,
+  payment_time: Date,
+  updatedAt: { type: Date, default: Date.now },
+});
+
+module.exports = mongoose.model("OrderStatus", OrderStatusSchema);
+
+user.js
+
+\const mongoose = require("mongoose");
+
+const UserSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  password: {
+    type: String,
+    required: true,
+  },
+  role: {
+    type: String,
+    enum: ["school", "admin"],
+    default: "school",
+  },
+});
+
+const UserModel = mongoose.model("users", UserSchema);
+
+module.exports = { UserModel };
+
+
+webhook.js
+
+const mongoose = require("mongoose");
+
+const WebhookLogSchema = new mongoose.Schema({
+  payload: { type: Object },
+  receivedAt: { type: Date, default: Date.now },
+});
+
+module.exports = mongoose.model("WebhookLog", WebhookLogSchema);
+
+authrouter.js
+const { signup, login } = require("../Controllers/AuthContollers");
+const {
+  signupValidation,
+  loginValidation,
+} = require("../Middlewares/AuthValidation");
+
+const router = require("express").Router();
+
+router.post("/login", loginValidation, login);
+router.post("/signup", signupValidation, signup);
+
+module.exports = router;
+
+
+paymentRouter.js
+const express = require("express");
+const axios = require("axios");
+const jwt = require("jsonwebtoken");
+
+const verifyToken = require("../Middlewares/verifyToken");
+const Order = require("../Models/Order");
+const OrderStatus = require("../Models/OrderStatus");
+const WebhookLog = require("../Models/WebhookLog");
+
+const router = express.Router();
+
+/**
+ * POST /payments/create-payment
+ * Protected route (expects user JWT in Authorization header)
+ * Body: { school_id, amount, callback_url, trustee_id?, student_info? }
+ */
+router.post("/create-payment", verifyToken, async (req, res) => {
+  try {
+    const { school_id, amount, callback_url, trustee_id, student_info } =
+      req.body;
+    if (!school_id || !amount || !callback_url) {
+      return res
+        .status(400)
+        .json({ message: "school_id, amount and callback_url required" });
+    }
+
+    // Build payload
+    const payload = {
+      school_id: String(school_id),
+      amount: String(amount),
+      callback_url: String(callback_url),
+    };
+
+    // sign using PG secret (pg_key)
+    const sign = jwt.sign(payload, process.env.PG_SECRET);
+
+    const requestBody = { ...payload, sign };
+
+    const response = await axios.post(
+      "https://dev-vanilla.edviron.com/erp/create-collect-request",
+      requestBody,
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${process.env.PAYMENT_API_KEY}`,
+        },
+        timeout: 10000,
+      }
+    );
+
+    const data = response.data;
+
+    // Save order locally
+    const collectId = data.collect_request_id;
+    const paymentUrl =
+      data.Collect_request_url || data.collect_request_url || data.payment_url;
+
+    const newOrder = new Order({
+      collect_id: collectId,
+      school_id: payload.school_id,
+      trustee_id: trustee_id || null,
+      student_info: student_info || {},
+      gateway_name: "Edviron",
+      order_amount: Number(amount),
+    });
+
+    await newOrder.save();
+
+    return res.json({ url: paymentUrl, collect_id: collectId, raw: data });
+  } catch (err) {
+    console.error("create-payment error:", err.response?.data || err.message);
+    return res.status(500).json({
+      message: "Payment creation failed",
+      error: err.response?.data || err.message,
+    });
+  }
+});
+
+/**
+ * POST /payments/webhook
+ * Public endpoint that receives gateway callbacks (server-to-server JSON payload)
+ */
+router.post("/webhook", async (req, res) => {
+  try {
+    const payload = req.body;
+    console.log("POST /webhook payload:", payload);
+
+    // Always log webhook
+    await WebhookLog.create({ payload, source: "webhook-post" });
+
+    const info = payload.order_info || payload.data || {};
+    const collect_id = info.order_id;
+    if (!collect_id) {
+      return res
+        .status(400)
+        .json({ message: "Missing order_id in webhook payload" });
+    }
+
+    const update = {
+      collect_id,
+      order_amount: info.order_amount,
+      transaction_amount: info.transaction_amount,
+      payment_mode: info.payment_mode,
+      payment_details: info.payment_details || info.payemnt_details,
+      bank_reference: info.bank_reference,
+      payment_message: info.Payment_message || info.payment_message,
+      status: info.status,
+      error_message: info.error_message,
+      payment_time: info.payment_time ? new Date(info.payment_time) : undefined,
+      updatedAt: new Date(),
+    };
+
+    await OrderStatus.findOneAndUpdate({ collect_id }, update, {
+      upsert: true,
+      new: true,
+    });
+
+    return res.status(200).json({ message: "Webhook processed" });
+  } catch (err) {
+    console.error("webhook error:", err);
+    return res
+      .status(500)
+      .json({ message: "Webhook failed", error: err.message });
+  }
+});
+
+/**
+ * GET /payments/callback
+ * Public endpoint for browser redirection after payment
+ * Stores the transaction result in DB and logs the payload
+ */
+router.get("/callback", async (req, res) => {
+  try {
+    const { EdvironCollectRequestId, status, reason } = req.query;
+
+    if (!EdvironCollectRequestId) {
+      return res.status(400).send("Missing EdvironCollectRequestId");
+    }
+
+    // Always log callback
+    await WebhookLog.create({
+      payload: req.query,
+      source: "callback-get",
+    });
+
+    // Update DB (minimal info — webhook still provides richer data)
+    const update = {
+      collect_id: EdvironCollectRequestId,
+      status: status || "unknown",
+      error_message: reason || null,
+      updatedAt: new Date(),
+    };
+
+    await OrderStatus.findOneAndUpdate(
+      { collect_id: EdvironCollectRequestId },
+      update,
+      { upsert: true, new: true }
+    );
+
+    // Show user-friendly page
+    return res.send(`
+      <html>
+        <head><title>Payment Status</title></head>
+        <body style="font-family: sans-serif; text-align: center; margin-top: 50px;">
+          <h1>Payment ${status}</h1>
+          <p>Order ID: ${EdvironCollectRequestId}</p>
+          <p>${reason || ""}</p>
+        </body>
+      </html>
+    `);
+  } catch (err) {
+    console.error("callback error:", err);
+    return res.status(500).send("Error displaying callback page");
+  }
+});
+
+/**
+ * GET /payments/transaction-status/:collect_id
+ * Protected route to query edviron status API
+ */
+router.get("/transaction-status/:collect_id", verifyToken, async (req, res) => {
+  try {
+    const { collect_id } = req.params;
+    if (!collect_id)
+      return res.status(400).json({ message: "collect_id required" });
+
+    const payload = {
+      school_id: process.env.SCHOOL_ID,
+      collect_request_id: String(collect_id),
+    };
+
+    const sign = jwt.sign(payload, process.env.PG_SECRET);
+
+    const url = `https://dev-vanilla.edviron.com/erp/collect-request/${collect_id}?school_id=${process.env.SCHOOL_ID}&sign=${sign}`;
+    const response = await axios.get(url, { timeout: 10000 });
+
+    return res.json(response.data);
+  } catch (err) {
+    console.error(
+      "transaction-status error:",
+      err.response?.data || err.message
+    );
+    return res.status(500).json({
+      message: "Status check failed",
+      error: err.response?.data || err.message,
+    });
+  }
+});
+
+module.exports = router;
+
+productRouter.js
+const ensureAuthenticated = require("../Middlewares/Auth");
+const router = require("express").Router();
+
+router.get("/", ensureAuthenticated, (req, res) => {
+  res.status(200).json([
+    { id: 1, brand: "Tesla", model: "Model 3", year: 2023, color: "White" },
+    { id: 2, brand: "Toyota", model: "Corolla", year: 2021, color: "Blue" },
+    { id: 3, brand: "BMW", model: "X5", year: 2022, color: "Black" },
+    { id: 4, brand: "Honda", model: "Civic", year: 2020, color: "Red" },
+    { id: 5, brand: "Ford", model: "Mustang", year: 2023, color: "Yellow" },
+  ]);
+});
+
+module.exports = router;
+
+transactionRouter.js
+const express = require("express");
+const verifyToken = require("../Middlewares/verifyToken");
+const Order = require("../Models/Order");
+
+const router = express.Router();
+
+/**
+ * GET /transactions
+ * Query params: page, limit, sort, order, status, school_id, from, to
+ * Returns aggregated data combining orders + order_status
+ */
+router.get("/", verifyToken, async (req, res) => {
+  try {
+    const {
+      page = 1,
+      limit = 20,
+      sort = "payment_time",
+      order = "desc",
+      status,
+      school_id,
+      from,
+      to,
+    } = req.query;
+
+    const skip = (Number(page) - 1) * Number(limit);
+
+    // Build $match filters for aggregation
+    const match = {};
+    if (school_id) match["order.school_id"] = String(school_id);
+    if (status) match["order_status.status"] = String(status);
+    if (from || to) {
+      match["order_status.payment_time"] = {};
+      if (from) match["order_status.payment_time"].$gte = new Date(from);
+      if (to) match["order_status.payment_time"].$lte = new Date(to);
+    }
+
+    const pipeline = [
+      {
+        $lookup: {
+          from: "orderstatuses",
+          localField: "collect_id",
+          foreignField: "collect_id",
+          as: "order_status",
+        },
+      },
+      { $unwind: { path: "$order_status", preserveNullAndEmptyArrays: true } },
+      { $match: match },
+      {
+        $project: {
+          collect_id: 1,
+          school_id: 1,
+          gateway: "$gateway_name",
+          order_amount: 1,
+          transaction_amount: "$order_status.transaction_amount",
+          status: "$order_status.status",
+          custom_order_id: "$collect_id",
+          payment_time: "$order_status.payment_time",
+        },
+      },
+      { $sort: { [sort]: order === "asc" ? 1 : -1 } },
+      { $skip: skip },
+      { $limit: Number(limit) },
+    ];
+
+    const data = await Order.aggregate(pipeline);
+
+    // total count with same filters
+    const countPipeline = [
+      {
+        $lookup: {
+          from: "orderstatuses",
+          localField: "collect_id",
+          foreignField: "collect_id",
+          as: "order_status",
+        },
+      },
+      { $unwind: { path: "$order_status", preserveNullAndEmptyArrays: true } },
+      { $match: match },
+      { $count: "count" },
+    ];
+
+    const countRes = await Order.aggregate(countPipeline);
+    const total = countRes[0]?.count || 0;
+
+    return res.json({ total, page: Number(page), limit: Number(limit), data });
+  } catch (err) {
+    console.error("transactions fetch error:", err);
+    return res
+      .status(500)
+      .json({ message: "Failed to fetch transactions", error: err.message });
+  }
+});
+
+/**
+ * GET /transactions/school/:schoolId
+ */
+router.get("/school/:schoolId", verifyToken, async (req, res) => {
+  try {
+    const { schoolId } = req.params;
+    const results = await Order.aggregate([
+      { $match: { school_id: String(schoolId) } },
+      {
+        $lookup: {
+          from: "orderstatuses",
+          localField: "collect_id",
+          foreignField: "collect_id",
+          as: "order_status",
+        },
+      },
+      { $unwind: { path: "$order_status", preserveNullAndEmptyArrays: true } },
+      {
+        $project: {
+          collect_id: 1,
+          school_id: 1,
+          gateway: "$gateway_name",
+          order_amount: 1,
+          transaction_amount: "$order_status.transaction_amount",
+          status: "$order_status.status",
+          custom_order_id: "$collect_id",
+        },
+      },
+    ]);
+
+    return res.json(results);
+  } catch (err) {
+    console.error("transactions by school error:", err);
+    return res.status(500).json({
+      message: "Failed to fetch transactions for school",
+      error: err.message,
+    });
+  }
+});
+
+module.exports = router;
+
+
+index,js
+require("dotenv").config();
+const express = require("express");
+const cors = require("cors");
+const morgan = require("morgan");
+const helmet = require("helmet");
+const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
+
+const AuthRouter = require("./Routes/AuthRouter");
+const PaymentRouter = require("./Routes/PaymentRouter");
+const TransactionRouter = require("./Routes/TransactionRouter");
+
+const app = express();
+
+// Basic middlewares
+app.use(helmet());
+app.use(cors());
+app.use(bodyParser.json());
+app.use(morgan("dev"));
+
+// Connect MongoDB
+mongoose
+  .connect(process.env.MONGO_DB_CONNECTION, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log("MongoDB connected"))
+  .catch((err) => {
+    console.error("MongoDB connection error:", err);
+    process.exit(1);
+  });
+
+// Routes
+app.use("/auth", AuthRouter);
+app.use("/payments", PaymentRouter);
+app.use("/transactions", TransactionRouter);
+
+// Health
+app.get("/", (req, res) => {
+  res.send("Edviron payments microservice running 🚀");
+});
+
+// Error fallback
+app.use((err, req, res, next) => {
+  console.error("Unhandled error:", err);
+  res
+    .status(500)
+    .json({ message: "Internal Server Error", error: err.message });
+});
+
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () =>
+  console.log(`Server is running on http://localhost:${PORT}`)
+);
+
+
+
+
+
+

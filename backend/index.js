@@ -9,7 +9,7 @@ const bodyParser = require("body-parser");
 const AuthRouter = require("./Routes/AuthRouter");
 const PaymentRouter = require("./Routes/PaymentRouter");
 const TransactionRouter = require("./Routes/TransactionRouter");
-
+const userRouter = require("./Routes/userRouter");
 const app = express();
 
 // Basic middlewares
@@ -34,7 +34,7 @@ mongoose
 app.use("/auth", AuthRouter);
 app.use("/payments", PaymentRouter);
 app.use("/transactions", TransactionRouter);
-
+app.use("/users", userRouter);
 // Health
 app.get("/", (req, res) => {
   res.send("Edviron payments microservice running 🚀");

@@ -83,7 +83,6 @@ router.post("/create-payment", verifyToken, async (req, res) => {
 router.post("/webhook", async (req, res) => {
   try {
     const payload = req.body;
-    console.log("POST /webhook payload:", payload);
 
     // Always log webhook
     await WebhookLog.create({ payload, source: "webhook-post" });
