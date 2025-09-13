@@ -2,7 +2,7 @@ import React from "react";
 import { Outlet } from "react-router-dom";
 import { Sidebar, TopBar } from "../src/components";
 import { useSelector } from "react-redux";
-import { selectThemeColor, selectDarkMode } from "../src/features/UI/UISlice";
+import { selectThemeColor, selectDarkMode } from "../src/features/ui/uiSlice";
 
 export const DashboardLayout = () => {
   const themeColor = useSelector(selectThemeColor);
