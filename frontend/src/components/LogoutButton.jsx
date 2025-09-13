@@ -1,13 +1,23 @@
 import toast from "react-hot-toast";
 import { LogOut } from "lucide-react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { logout } from "../features/auth/AuthSlice";
 
 const LogoutButton = ({ collapsed, isMobile }) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const darkMode = useSelector((state) => state.ui.darkMode);
+
+  const handleLogout = () => {
+    dispatch(logout()); //
+    toast.success("Logged out successfully");
+    navigate("/", { replace: true }); //
+  };
 
   return (
     <button
-      onClick={() => toast.success("Logged out successfully")}
+      onClick={handleLogout}
       className={`flex transition-colors duration-300 ${
         isMobile
           ? `flex-col text-xs gap-1 ${

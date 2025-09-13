@@ -23,9 +23,13 @@ const NavItem = ({
     "flex items-center gap-3 py-3 px-4 rounded-l-xl transition-colors duration-300";
 
   // Colors tuned for parent bg #1E1B44
-  const activeClasses = "bg-white text-[#7C6BF6] shadow-md"; // highlighted background
-  const inactiveClasses =
-    "text-[#7C6BF6] hover:bg-[#2D285A] hover:text-[#7C6BF6]"; // transparent until hover
+  const activeClasses = darkMode
+    ? "bg-[#2D285A] text-[#7C6BF6] shadow-md" // when dark mode is ON
+    : "bg-white text-[#7C6BF6] shadow-md"; // when dark mode is OFF
+
+  const inactiveClasses = darkMode
+    ? "text-[#7C6BF6] hover:bg-[#1F1A4D] hover:text-[#7C6BF6]" // dark mode inactive
+    : "text-[#E0E7FF] hover:bg-[#0F48B8] hover:text-[#E0E7FF]"; // light mode inactive
 
   // If it's the dark mode toggle button
   if (isButton && label.toLowerCase().includes("dark")) {
@@ -34,8 +38,8 @@ const NavItem = ({
         onClick={() => dispatch(toggleDarkMode())}
         className={`w-full ${baseClasses} ${
           darkMode
-            ? "bg-[#2D285A] text-[#7C6BF6]"
-            : "bg-transparent text-[#7C6BF6] hover:bg-[#2D285A]"
+            ? "bg-[#2D285A] text-[#7C6BF6] hover:bg-[#1F1A4D]"
+            : "bg-transparent text-[#E0E7FF] hover:bg-[#0F48B8]"
         } flex items-center gap-3`}>
         {darkMode ? (
           <FiSun className="w-5 h-5" />

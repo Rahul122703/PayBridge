@@ -58,7 +58,7 @@ const LoginForm = () => {
         // localStorage.setItem("authUser", JSON.stringify({ user: { name, email, role, token: jwtToken, message }, role }));
 
         // ✅ Redirect to dashboard
-        navigate("/dashboard", { replace: true });
+        navigate("/home", { replace: true });
       }
     } catch (err) {
       console.log(err);

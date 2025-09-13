@@ -12,7 +12,7 @@ const DashboardNotFound = () => (
 const AdminRoutes = () => (
   <Routes>
     <Route path="/" element={<DashboardLayout />}>
-      <Route index element={<HomePage />} />
+      <Route path="home" element={<HomePage />} />
       <Route path="settings" element={<h1>Admin Settings</h1>} />
       <Route path="*" element={<DashboardNotFound />} />
     </Route>

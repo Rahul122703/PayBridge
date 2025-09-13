@@ -1,12 +1,13 @@
 import { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom"; // ✅ import navigate
 import { UserCircle, ChevronDown } from "lucide-react";
 import toast from "react-hot-toast";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux"; // ✅ import dispatch
 import webLogo from "../assets/weblogo.png";
+import { logout } from "../features/auth/AuthSlice"; // ✅ import logout action
 
 /* --------------------- DROPDOWN MENU --------------------- */
-const DropdownMenu = ({ dropdownRef }) => {
+const DropdownMenu = ({ dropdownRef, onLogout }) => {
   const darkMode = useSelector((state) => state.ui.darkMode);
 
   return (
@@ -31,7 +32,8 @@ const DropdownMenu = ({ dropdownRef }) => {
         </Link>
         <li
           className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition cursor-pointer"
-          onClick={() => toast.success("Logged out successfully")}>
+          onClick={onLogout} // ✅ call logout function
+        >
           Logout
         </li>
       </ul>
@@ -40,7 +42,12 @@ const DropdownMenu = ({ dropdownRef }) => {
 };
 
 /* --------------------- MOBILE TOPBAR --------------------- */
-const TopbarMobile = ({ toggleDropdown, dropdownOpen, dropdownRef }) => {
+const TopbarMobile = ({
+  toggleDropdown,
+  dropdownOpen,
+  dropdownRef,
+  onLogout,
+}) => {
   const darkMode = useSelector((state) => state.ui.darkMode);
   const themeColor = useSelector((state) => state.ui.themeColor);
   return (
@@ -59,20 +66,27 @@ const TopbarMobile = ({ toggleDropdown, dropdownOpen, dropdownRef }) => {
           <span className="hidden sm:block font-medium">Rahul</span>
           <ChevronDown className="text-gray-300" size={18} />
         </button>
-        {dropdownOpen && <DropdownMenu dropdownRef={dropdownRef} />}
+        {dropdownOpen && (
+          <DropdownMenu dropdownRef={dropdownRef} onLogout={onLogout} />
+        )}
       </div>
     </div>
   );
 };
 
 /* --------------------- DESKTOP TOPBAR --------------------- */
-const TopbarDesktop = ({ toggleDropdown, dropdownOpen, dropdownRef }) => {
+const TopbarDesktop = ({
+  toggleDropdown,
+  dropdownOpen,
+  dropdownRef,
+  onLogout,
+}) => {
   const darkMode = useSelector((state) => state.ui.darkMode);
   const themeColor = useSelector((state) => state.ui.themeColor);
 
   return (
     <div
-      className={`w-full transition-all duration-300 px-4 py-3  justify-between items-center sticky top-0 hidden md:flex
+      className={`w-full transition-all duration-300 px-4 py-3 justify-between items-center sticky top-0 hidden md:flex
         ${darkMode ? "bg-gray-900 text-white" : ` text-white`}`}
       style={!darkMode ? { backgroundColor: themeColor } : {}}>
       <div className="text-xl font-bold tracking-wide border border-none flex flex-row justify-between items-center w-full max-w-[10rem]">
@@ -87,7 +101,9 @@ const TopbarDesktop = ({ toggleDropdown, dropdownOpen, dropdownRef }) => {
           <span className="hidden sm:block font-medium">Rahul</span>
           <ChevronDown className="text-gray-300" size={18} />
         </button>
-        {dropdownOpen && <DropdownMenu dropdownRef={dropdownRef} />}
+        {dropdownOpen && (
+          <DropdownMenu dropdownRef={dropdownRef} onLogout={onLogout} />
+        )}
       </div>
     </div>
   );
@@ -97,6 +113,8 @@ const TopbarDesktop = ({ toggleDropdown, dropdownOpen, dropdownRef }) => {
 export default function Topbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const dispatch = useDispatch();
+  const navigate = useNavigate(); // ✅ useNavigate for redirect
 
   const toggleDropdown = () => setDropdownOpen((prev) => !prev);
 
@@ -111,17 +129,26 @@ export default function Topbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // ✅ Logout function
+  const handleLogout = () => {
+    dispatch(logout());
+    toast.success("Logged out successfully");
+    navigate("/", { replace: true });
+  };
+
   return (
     <>
       <TopbarMobile
         toggleDropdown={toggleDropdown}
         dropdownOpen={dropdownOpen}
         dropdownRef={dropdownRef}
+        onLogout={handleLogout} // pass logout
       />
       <TopbarDesktop
         toggleDropdown={toggleDropdown}
         dropdownOpen={dropdownOpen}
         dropdownRef={dropdownRef}
+        onLogout={handleLogout} // pass logout
       />
     </>
   );

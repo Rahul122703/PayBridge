@@ -1,7 +1,8 @@
-const Home = () => {
+const Homepage = () => {
   return (
-    <div className="flex flex-col w-full border border-black bg-white text-gray-900 dark:bg-gray-900 dark:text-gray-100 transition-colors duration-30 h-full ">
-      <div className="flex flex-1 items-center justify-center overflow-hidden w-full border border-none">
+    <div
+      className={`flex flex-col w-full h-full transition-colors duration-300 bg-white`}>
+      <div className="flex flex-1 items-center justify-center w-full">
         <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-center">
           react-vite-tailwind-starter-pack
         </h1>
@@ -10,4 +11,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default Homepage;

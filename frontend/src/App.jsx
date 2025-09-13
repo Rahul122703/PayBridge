@@ -11,16 +11,28 @@ import { Toaster } from "react-hot-toast";
 import LandingRoutes from "../LandingRoutes";
 import AdminRoutes from "../AdminRoutes";
 import SchoolRoutes from "../SchoolRoutes";
+
 import { selectIsLoggedIn, selectRole } from "./features/auth/AuthSlice";
+import { selectDarkMode } from "./features/UI/UISlice"; // ✅ select darkMode from your slice
 
 const App = () => {
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const role = useSelector(selectRole);
+  const darkMode = useSelector(selectDarkMode);
+
+  // ✅ Add or remove Tailwind dark class based on Redux state
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [darkMode]);
 
   return (
     <Router>
       <Routes>
-        {/* ---------------- Landing routes always accessible for guests ---------------- */}
+        {/* ---------------- Landing routes for guests ---------------- */}
         {!isLoggedIn && <Route path="/*" element={<LandingRoutes />} />}
 
         {/* ---------------- Authenticated routes based on role ---------------- */}
@@ -31,7 +43,7 @@ const App = () => {
           <Route path="/*" element={<SchoolRoutes />} />
         )}
 
-        {/* ---------------- Fallback for logged-in users trying to access landing routes ---------------- */}
+        {/* ---------------- Fallback for logged-in users trying to access landing ---------------- */}
         {isLoggedIn && (
           <Route path="/*" element={<Navigate to="/dashboard" replace />} />
         )}
