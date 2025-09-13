@@ -31,7 +31,7 @@ const NavbarComponent = () => {
             About
           </Link>
           <Link
-            to="/auth"
+            to="/login"
             className="hover:text-blue-600 dark:hover:text-blue-400 transition">
             Authenticate
           </Link>
@@ -54,7 +54,7 @@ const NavbarComponent = () => {
             About
           </Link>
           <Link
-            to="/auth"
+            to="/login"
             className="hover:text-blue-600 dark:hover:text-blue-400 transition">
             Authenticate
           </Link>

@@ -22,7 +22,7 @@ const Hero = () => {
 
           <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
             <a
-              href="/auth"
+              href="/login"
               className="px-8 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-md transition-colors duration-200 font-semibold">
               Get Started
             </a>

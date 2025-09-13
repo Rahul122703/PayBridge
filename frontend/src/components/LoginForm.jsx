@@ -1,23 +1,32 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { z } from "zod";
 import toast from "react-hot-toast";
 import axios from "axios";
-
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import { login } from "../features/auth/AuthSlice";
 const BACKEND_URL = import.meta.env.VITE_API_URL;
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email"),
-  password: z.string().min(6, "Password must be at least 4 characters"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false); // ✅ loader state
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  // ✅ Check localStorage on mount
+  useEffect(() => {
+    const storedAuth = JSON.parse(localStorage.getItem("authUser"));
+    if (storedAuth?.user) {
+      navigate("/dashboard", { replace: true });
+    }
+  }, [navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -27,27 +36,35 @@ const LoginForm = () => {
     if (!result.success) return toast.error(result.error.errors[0].message);
 
     try {
-      setLoading(true); // ✅ start loader
+      setLoading(true);
       const res = await axios.post(`${BACKEND_URL}/auth/login`, data);
 
       if (res.data.success) {
         toast.success("Login successful!");
 
+        const { message, name, email, role, jwtToken } = res.data;
+
         dispatch(
           login({
-            name: res.data.name,
-            email: res.data.email,
-            token: res.data.jwtToken,
+            name,
+            email,
+            token: jwtToken,
+            message,
+            role,
           })
         );
 
-        console.log("User stored in Redux:", res.data);
+        // ✅ Save to localStorage (also handled in slice)
+        // localStorage.setItem("authUser", JSON.stringify({ user: { name, email, role, token: jwtToken, message }, role }));
+
+        // ✅ Redirect to dashboard
+        navigate("/dashboard", { replace: true });
       }
     } catch (err) {
       console.log(err);
       toast.error(err.response?.data?.message || "Login failed");
     } finally {
-      setLoading(false); // ✅ stop loader
+      setLoading(false);
     }
   };
 
