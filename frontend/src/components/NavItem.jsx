@@ -1,9 +1,8 @@
 import React from "react";
 import { Link, useMatch, useResolvedPath } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { toggleDarkMode } from "../features/UI/UISlice";
 import { FiMoon, FiSun } from "react-icons/fi";
-
+import { toggleDarkMode } from "../features/ui/uISlice";
 const NavItem = ({
   icon: Icon,
   label,

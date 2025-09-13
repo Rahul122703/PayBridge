@@ -4,7 +4,7 @@ import { useLocation } from "react-router-dom";
 import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import NavList from "./NavList";
 import LogoutButton from "./LogoutButton";
-import { toggleCollapse } from "../features/UI/UISlice";
+import { toggleCollapse } from "../features/ui/uISlice";
 
 export default function SidebarDesktop() {
   const location = useLocation();

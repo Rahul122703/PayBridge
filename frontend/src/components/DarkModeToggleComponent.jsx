@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleDarkMode } from "../features/UI/UISlice";
+import { toggleDarkMode } from "../features/ui/uISlice";
 import { FiMoon, FiSun } from "react-icons/fi";
 
 const DarkModeToggleComponent = () => {

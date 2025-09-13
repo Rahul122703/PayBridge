@@ -1,7 +1,7 @@
 import React from "react";
 import { useLocation, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { toggleDarkMode } from "../features/UI/UISlice";
+import { toggleDarkMode } from "../features/ui/uISlice";
 
 export default function BottomNavMobile() {
   const location = useLocation();

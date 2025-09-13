@@ -13,8 +13,7 @@ import AdminRoutes from "../AdminRoutes";
 import SchoolRoutes from "../SchoolRoutes";
 
 import { selectIsLoggedIn, selectRole } from "./features/auth/AuthSlice";
-import { selectDarkMode } from "./features/UI/UISlice"; // ✅ select darkMode from your slice
-
+import { selectDarkMode } from "./features/ui/uISlice";
 const App = () => {
   const isLoggedIn = useSelector(selectIsLoggedIn);
   const role = useSelector(selectRole);

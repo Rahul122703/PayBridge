@@ -2,7 +2,7 @@ import React from "react";
 import { Outlet } from "react-router-dom";
 import { Sidebar, TopBar } from "../src/components";
 import { useSelector } from "react-redux";
-import { selectThemeColor, selectDarkMode } from "../src/features/ui/uiSlice";
+import { selectThemeColor, selectDarkMode } from "../src/features/ui/uISlice";
 
 export const DashboardLayout = () => {
   const themeColor = useSelector(selectThemeColor);
@@ -22,3 +22,4 @@ export const DashboardLayout = () => {
     </div>
   );
 };
+//change fodler name

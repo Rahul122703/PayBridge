@@ -1,4 +1,4 @@
 import AuthReducer from "./auth/AuthSlice";
-import UIReducer from "./UI/UISlice";
+import UiReducer from "./ui/uISlice";
 
-export { AuthReducer, UIReducer };
+export { AuthReducer, UiReducer };
