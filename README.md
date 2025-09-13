@@ -1,6 +1,6 @@
 # 🚀 Edviron Payments Microservice
 
-**Live Demo:** [edvironpay.vercel.app](https://edvironpay.vercel.app)lvie
+**Live Demo:** [edvironpay.vercel.app](https://edvironpay.vercel.app)
 
 ## 🔐 Auth APIs (`/auth`)
 
