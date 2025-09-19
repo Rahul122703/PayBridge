@@ -1,4 +1,4 @@
-// components/Tabs.jsx
+
 import React from "react";
 
 import { selectActiveTab, setActiveTab } from "../features/auth/AuthSlice";

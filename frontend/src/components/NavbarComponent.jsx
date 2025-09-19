@@ -14,7 +14,7 @@ const NavbarComponent = () => {
         <button
           className="sm:hidden focus:outline-none"
           onClick={() => setIsOpen(!isOpen)}>
-          {/* Hamburger icon */}
+      
           <div className="w-6 h-0.5 bg-gray-900 dark:bg-gray-100 mb-1"></div>
           <div className="w-6 h-0.5 bg-gray-900 dark:bg-gray-100 mb-1"></div>
           <div className="w-6 h-0.5 bg-gray-900 dark:bg-gray-100"></div>
@@ -40,7 +40,6 @@ const NavbarComponent = () => {
         </div>
       </div>
 
-      {/* Dropdown menu for small screens */}
       {isOpen && (
         <div className="sm:hidden flex flex-col px-4 pb-4 gap-3">
           <Link

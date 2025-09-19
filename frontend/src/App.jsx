@@ -19,7 +19,6 @@ const App = () => {
   const role = useSelector(selectRole);
   const darkMode = useSelector(selectDarkMode);
 
-  // ✅ Add or remove Tailwind dark class based on Redux stat
   useEffect(() => {
     if (darkMode) {
       document.documentElement.classList.add("dark");
@@ -31,10 +30,8 @@ const App = () => {
   return (
     <Router>
       <Routes>
-        {/* ---------------- Landing routes for guests ---------------- */}
         {!isLoggedIn && <Route path="/*" element={<LandingRoutes />} />}
 
-        {/* ---------------- Authenticated routes based on role ---------------- */}
         {isLoggedIn && role === "admin" && (
           <Route path="/*" element={<AdminRoutes />} />
         )}
@@ -42,7 +39,6 @@ const App = () => {
           <Route path="/*" element={<SchoolRoutes />} />
         )}
 
-        {/* ---------------- Fallback for logged-in users trying to access landing ---------------- */}
         {isLoggedIn && (
           <Route path="/*" element={<Navigate to="/dashboard" replace />} />
         )}

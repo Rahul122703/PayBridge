@@ -57,7 +57,6 @@ const TransactionPage = () => {
         Transactions
       </h1>
 
-      {/* Responsive table/cards */}
       <div className="overflow-x-auto shadow-md rounded-lg">
         <table className="w-full hidden md:table">
           <thead className="bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-200">
@@ -101,7 +100,6 @@ const TransactionPage = () => {
           </tbody>
         </table>
 
-        {/* Mobile cards */}
         <div className="grid grid-cols-1 gap-4 md:hidden">
           {transactions.map((tx) => (
             <div

@@ -2,7 +2,7 @@ const Hero = () => {
   return (
     <section className="w-full bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 transition-colors duration-300 h-[90vh]">
       <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-10 px-6 md:px-12 lg:px-16 py-20">
-        {/* Text Section */}
+     
         <div className="flex-1 text-center lg:text-left">
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight">
             Manage Payments
@@ -34,7 +34,7 @@ const Hero = () => {
           </div>
         </div>
 
-        {/* Image Section */}
+      
         <div className="flex-1">
           <img
             src="https://img.freepik.com/free-vector/online-payment-concept-illustration_114360-1675.jpg"

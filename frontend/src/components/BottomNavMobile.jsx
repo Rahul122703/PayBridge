@@ -23,7 +23,7 @@ export default function BottomNavMobile() {
         const isActive = location.pathname === item.route;
         const Icon = item.icon;
 
-        // Dark mode toggle button
+      
         if (item.isButton && item.label.toLowerCase().includes("dark")) {
           return (
             <button
@@ -41,7 +41,7 @@ export default function BottomNavMobile() {
           );
         }
 
-        // Normal nav links
+    
         return (
           <Link
             key={idx}

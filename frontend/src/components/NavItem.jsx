@@ -21,16 +21,16 @@ const NavItem = ({
   const baseClasses =
     "flex items-center gap-3 py-3 px-4 rounded-l-xl transition-colors duration-300";
 
-  // Colors tuned for parent bg #1E1B44
+
   const activeClasses = darkMode
-    ? "bg-[#2D285A] text-[#7C6BF6] shadow-md" // when dark mode is ON
-    : "bg-white text-[#7C6BF6] shadow-md"; // when dark mode is OFF
+    ? "bg-[#2D285A] text-[#7C6BF6] shadow-md" 
+    : "bg-white text-[#7C6BF6] shadow-md"; 
 
   const inactiveClasses = darkMode
-    ? "text-[#7C6BF6] hover:bg-[#1F1A4D] hover:text-[#7C6BF6]" // dark mode inactive
-    : "text-[#E0E7FF] hover:bg-[#0F48B8] hover:text-[#E0E7FF]"; // light mode inactive
+    ? "text-[#7C6BF6] hover:bg-[#1F1A4D] hover:text-[#7C6BF6]"
+    : "text-[#E0E7FF] hover:bg-[#0F48B8] hover:text-[#E0E7FF]";
 
-  // If it's the dark mode toggle button
+
   if (isButton && label.toLowerCase().includes("dark")) {
     return (
       <button
@@ -50,7 +50,7 @@ const NavItem = ({
     );
   }
 
-  // Normal button (not link)
+
   if (isButton) {
     return (
       <button
@@ -62,7 +62,7 @@ const NavItem = ({
     );
   }
 
-  // Normal link
+
   return (
     <Link
       to={route}

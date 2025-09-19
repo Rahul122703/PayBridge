@@ -1,4 +1,4 @@
-// pages/LoginSignUpPage.jsx
+
 import React, { useState } from "react";
 
 import { Tabs, LoginForm, SignupForm } from "../components";

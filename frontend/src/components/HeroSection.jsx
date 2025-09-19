@@ -6,11 +6,11 @@ const HeroSection = () => {
   const managements = ["SCHOOL", "COLLEGE", "MANAGEMENTS"];
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // cycle through managements array
+
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % managements.length);
-    }, 2000); // change every 2s
+    }, 2000); 
     return () => clearInterval(interval);
   }, [managements.length]);
 
@@ -42,9 +42,9 @@ const HeroSection = () => {
               For
             </motion.span>
 
-            {/* Animated managements word */}
+        
             <motion.span
-              key={currentIndex} // trigger re-animation
+              key={currentIndex} 
               className="text-black dark:text-white ml-2"
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}

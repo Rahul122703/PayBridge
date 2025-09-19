@@ -78,7 +78,6 @@ const Homepage = () => {
           Registered Schools
         </h1>
 
-        {/* Summary Card */}
         <div className="w-full max-w-4xl mb-6">
           <div className="p-6 bg-blue-500 text-white rounded-2xl shadow-md flex justify-between items-center">
             <div>
@@ -89,7 +88,6 @@ const Homepage = () => {
           </div>
         </div>
 
-        {/* Schools as Cards */}
         <div className="w-full max-w-[70rem] grid grid-cols-1 md:grid-cols-2 gap-4">
           {users.length === 0 ? (
             <p className="text-center text-gray-500 w-full">No schools found</p>

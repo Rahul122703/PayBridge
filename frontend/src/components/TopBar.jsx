@@ -1,12 +1,10 @@
 import { useState, useRef, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom"; // ✅ import navigate
+import { Link, useNavigate } from "react-router-dom"; 
 import { UserCircle, ChevronDown } from "lucide-react";
 import toast from "react-hot-toast";
-import { useSelector, useDispatch } from "react-redux"; // ✅ import dispatch
+import { useSelector, useDispatch } from "react-redux";
 import webLogo from "../assets/weblogo.png";
-import { logout } from "../features/auth/AuthSlice"; // ✅ import logout action
-
-/* --------------------- DROPDOWN MENU --------------------- */
+import { logout } from "../features/auth/AuthSlice"; 
 const DropdownMenu = ({ dropdownRef, onLogout }) => {
   const darkMode = useSelector((state) => state.ui.darkMode);
 
@@ -32,7 +30,7 @@ const DropdownMenu = ({ dropdownRef, onLogout }) => {
         </Link>
         <li
           className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-700 transition cursor-pointer"
-          onClick={onLogout} // ✅ call logout function
+          onClick={onLogout} 
         >
           Logout
         </li>
@@ -41,7 +39,6 @@ const DropdownMenu = ({ dropdownRef, onLogout }) => {
   );
 };
 
-/* --------------------- MOBILE TOPBAR --------------------- */
 const TopbarMobile = ({
   toggleDropdown,
   dropdownOpen,
@@ -74,7 +71,6 @@ const TopbarMobile = ({
   );
 };
 
-/* --------------------- DESKTOP TOPBAR --------------------- */
 const TopbarDesktop = ({
   toggleDropdown,
   dropdownOpen,
@@ -109,7 +105,6 @@ const TopbarDesktop = ({
   );
 };
 
-/* --------------------- MAIN TOPBAR WRAPPER --------------------- */
 export default function Topbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
@@ -129,7 +124,6 @@ export default function Topbar() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // ✅ Logout function
   const handleLogout = () => {
     dispatch(logout());
     toast.success("Logged out successfully");
@@ -142,13 +136,13 @@ export default function Topbar() {
         toggleDropdown={toggleDropdown}
         dropdownOpen={dropdownOpen}
         dropdownRef={dropdownRef}
-        onLogout={handleLogout} // pass logout
+        onLogout={handleLogout} 
       />
       <TopbarDesktop
         toggleDropdown={toggleDropdown}
         dropdownOpen={dropdownOpen}
         dropdownRef={dropdownRef}
-        onLogout={handleLogout} // pass logout
+        onLogout={handleLogout} 
       />
     </>
   );

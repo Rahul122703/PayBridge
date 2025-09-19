@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import { login } from "../features/auth/AuthSlice";
-// const BACKEND_URL = import.meta.env.VITE_API_URL; // !!!!!!!!!! WARNING : UNCOMMENT THIS AND THEN RUN WHEN RUNNING ON LOCALHOST !!!!!!!!!!!
+ // !!!!!!!!!! WARNING : UNCOMMENT THIS AND THEN RUN WHEN RUNNING ON LOCALHOST !!!!!!!!!!!
 const BACKEND_URL = "https://paybridge-39eo.onrender.com"; // !!!!!!!!!! WARNING : COMMENT THIS AND THEN RUN WHEN NOT RUNNING ON LOCALHOST !!!!!!!!!!!
 
 const loginSchema = z.object({
@@ -21,7 +21,7 @@ const LoginForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // ✅ Check localStorage on mount
+
   useEffect(() => {
     const storedAuth = JSON.parse(localStorage.getItem("authUser"));
     if (storedAuth?.user) {
@@ -55,10 +55,6 @@ const LoginForm = () => {
           })
         );
 
-        // ✅ Save to localStorage (also handled in slice)
-        // localStorage.setItem("authUser", JSON.stringify({ user: { name, email, role, token: jwtToken, message }, role }));
-
-        // ✅ Redirect to dashboard
         navigate("/home", { replace: true });
       }
     } catch (err) {

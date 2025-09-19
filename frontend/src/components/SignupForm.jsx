@@ -5,7 +5,7 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setActiveTab } from "../features/auth/AuthSlice";
 
-// ✅ Zod schema with role included
+
 const signupSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email"),
@@ -22,7 +22,7 @@ const SignupForm = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("school"); // default role = school
+  const [role, setRole] = useState("school");
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 
@@ -50,7 +50,7 @@ const SignupForm = () => {
 
   return (
     <form className="space-y-5" onSubmit={handleSignup}>
-      {/* Name */}
+   
       <div>
         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
           Name
@@ -66,7 +66,7 @@ const SignupForm = () => {
         />
       </div>
 
-      {/* Email */}
+
       <div>
         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
           Email
@@ -82,7 +82,6 @@ const SignupForm = () => {
         />
       </div>
 
-      {/* Password */}
       <div>
         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
           Password
@@ -98,7 +97,6 @@ const SignupForm = () => {
         />
       </div>
 
-      {/* Role Dropdown */}
       <div>
         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
           Role
@@ -114,7 +112,6 @@ const SignupForm = () => {
         </select>
       </div>
 
-      {/* Submit button */}
       <button
         type="submit"
         disabled={loading}
