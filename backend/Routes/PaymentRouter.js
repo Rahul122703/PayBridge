@@ -9,11 +9,7 @@ const WebhookLog = require("../Models/WebhookLog");
 
 const router = express.Router();
 
-/**
- * POST /payments/create-payment
- * Protected route (expects user JWT in Authorization header)
- * Body: { school_id, amount, callback_url, trustee_id?, student_info? }
- */
+
 router.post("/create-payment", verifyToken, async (req, res) => {
   try {
     const { school_id, amount, callback_url, trustee_id, student_info } =
@@ -24,14 +20,14 @@ router.post("/create-payment", verifyToken, async (req, res) => {
         .json({ message: "school_id, amount and callback_url required" });
     }
 
-    // Build payload
+ d
     const payload = {
       school_id: String(school_id),
       amount: String(amount),
       callback_url: String(callback_url),
     };
 
-    // sign using PG secret (pg_key)
+   
     const sign = jwt.sign(payload, process.env.PG_SECRET);
 
     const requestBody = { ...payload, sign };
@@ -50,7 +46,7 @@ router.post("/create-payment", verifyToken, async (req, res) => {
 
     const data = response.data;
 
-    // Save order locally
+ 
     const collectId = data.collect_request_id;
     const paymentUrl =
       data.Collect_request_url || data.collect_request_url || data.payment_url;
@@ -76,15 +72,11 @@ router.post("/create-payment", verifyToken, async (req, res) => {
   }
 });
 
-/**
- * POST /payments/webhook
- * Public endpoint that receives gateway callbacks (server-to-server JSON payload)
- */
 router.post("/webhook", async (req, res) => {
   try {
     const payload = req.body;
 
-    // Always log webhook
+
     await WebhookLog.create({ payload, source: "webhook-post" });
 
     const info = payload.order_info || payload.data || {};
@@ -123,11 +115,7 @@ router.post("/webhook", async (req, res) => {
   }
 });
 
-/**
- * GET /payments/callback
- * Public endpoint for browser redirection after payment
- * Stores the transaction result in DB and logs the payload
- */
+
 router.get("/callback", async (req, res) => {
   try {
     const { EdvironCollectRequestId, status, reason } = req.query;
@@ -136,13 +124,12 @@ router.get("/callback", async (req, res) => {
       return res.status(400).send("Missing EdvironCollectRequestId");
     }
 
-    // Always log callback
+    
     await WebhookLog.create({
       payload: req.query,
       source: "callback-get",
     });
 
-    // Update DB (minimal info — webhook still provides richer data)
     const update = {
       collect_id: EdvironCollectRequestId,
       status: status || "unknown",
@@ -156,7 +143,6 @@ router.get("/callback", async (req, res) => {
       { upsert: true, new: true }
     );
 
-    // Show user-friendly page
     return res.send(`
       <html>
         <head><title>Payment Status</title></head>
@@ -173,10 +159,7 @@ router.get("/callback", async (req, res) => {
   }
 });
 
-/**
- * GET /payments/transaction-status/:collect_id
- * Protected route to query edviron status API
- */
+
 router.get("/transaction-status/:collect_id", verifyToken, async (req, res) => {
   try {
     const { collect_id } = req.params;

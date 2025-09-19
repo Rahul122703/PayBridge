@@ -12,13 +12,11 @@ const TransactionRouter = require("./Routes/TransactionRouter");
 const userRouter = require("./Routes/userRouter");
 const app = express();
 
-// Basic middlewares
 app.use(helmet());
 app.use(cors());
 app.use(bodyParser.json());
 app.use(morgan("dev"));
 
-// Connect MongoDB
 mongoose
   .connect(process.env.MONGO_DB_CONNECTION, {
     useNewUrlParser: true,
@@ -30,17 +28,15 @@ mongoose
     process.exit(1);
   });
 
-// Routes
 app.use("/auth", AuthRouter);
 app.use("/payments", PaymentRouter);
 app.use("/transactions", TransactionRouter);
 app.use("/users", userRouter);
-// Health
+
 app.get("/", (req, res) => {
   res.send("Edviron payments microservice running 🚀");
 });
 
-// Error fallback
 app.use((err, req, res, next) => {
   console.error("Unhandled error:", err);
   res

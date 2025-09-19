@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 
 const OrderStatusSchema = new mongoose.Schema({
-  collect_id: { type: String, index: true, required: true }, // matches Order.collect_id
+  collect_id: { type: String, index: true, required: true },
   order_amount: Number,
   transaction_amount: Number,
   payment_mode: String,

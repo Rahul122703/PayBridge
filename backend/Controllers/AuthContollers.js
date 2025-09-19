@@ -2,12 +2,12 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { UserModel } = require("../Models/User");
 
-// Signup Controller
+
 const signup = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
 
-    // check if user already exists
+  
     const user = await UserModel.findOne({ email });
     if (user) {
       return res.status(409).json({
@@ -16,15 +16,15 @@ const signup = async (req, res) => {
       });
     }
 
-    // hash password
+
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // create new user
+   
     const newUser = new UserModel({
       name,
       email,
       password: hashedPassword,
-      role: role || "school", // default role if not given
+      role: role || "school",
     });
     await newUser.save();
 
@@ -37,14 +37,14 @@ const signup = async (req, res) => {
   }
 };
 
-// Login Controller
+
 const login = async (req, res) => {
   const errorMessage = `Auth failed as email or password is wrong`;
 
   try {
     const { email, password } = req.body;
 
-    // check if user exists
+
     const user = await UserModel.findOne({ email });
     if (!user) {
       return res.status(403).json({
@@ -53,13 +53,13 @@ const login = async (req, res) => {
       });
     }
 
-    // check password
+
     const isPasswordEqual = await bcrypt.compare(password, user.password);
     if (!isPasswordEqual) {
       return res.status(403).json({ message: errorMessage, success: false });
     }
 
-    // generate JWT with role also included
+   
     const jwtToken = jwt.sign(
       { email: user.email, id: user._id, role: user.role },
       process.env.JWT_SECRET,
