@@ -9,7 +9,6 @@ const WebhookLog = require("../Models/WebhookLog");
 
 const router = express.Router();
 
-
 router.post("/create-payment", verifyToken, async (req, res) => {
   try {
     const { school_id, amount, callback_url, trustee_id, student_info } =
@@ -20,14 +19,12 @@ router.post("/create-payment", verifyToken, async (req, res) => {
         .json({ message: "school_id, amount and callback_url required" });
     }
 
- d
     const payload = {
       school_id: String(school_id),
       amount: String(amount),
       callback_url: String(callback_url),
     };
 
-   
     const sign = jwt.sign(payload, process.env.PG_SECRET);
 
     const requestBody = { ...payload, sign };
@@ -46,7 +43,6 @@ router.post("/create-payment", verifyToken, async (req, res) => {
 
     const data = response.data;
 
- 
     const collectId = data.collect_request_id;
     const paymentUrl =
       data.Collect_request_url || data.collect_request_url || data.payment_url;
@@ -75,7 +71,6 @@ router.post("/create-payment", verifyToken, async (req, res) => {
 router.post("/webhook", async (req, res) => {
   try {
     const payload = req.body;
-
 
     await WebhookLog.create({ payload, source: "webhook-post" });
 
@@ -115,7 +110,6 @@ router.post("/webhook", async (req, res) => {
   }
 });
 
-
 router.get("/callback", async (req, res) => {
   try {
     const { EdvironCollectRequestId, status, reason } = req.query;
@@ -124,7 +118,6 @@ router.get("/callback", async (req, res) => {
       return res.status(400).send("Missing EdvironCollectRequestId");
     }
 
-    
     await WebhookLog.create({
       payload: req.query,
       source: "callback-get",
@@ -158,7 +151,6 @@ router.get("/callback", async (req, res) => {
     return res.status(500).send("Error displaying callback page");
   }
 });
-
 
 router.get("/transaction-status/:collect_id", verifyToken, async (req, res) => {
   try {

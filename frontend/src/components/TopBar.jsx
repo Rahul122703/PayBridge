@@ -109,7 +109,7 @@ export default function Topbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
   const dispatch = useDispatch();
-  const navigate = useNavigate(); // ✅ useNavigate for redirect
+  const navigate = useNavigate();
 
   const toggleDropdown = () => setDropdownOpen((prev) => !prev);
 

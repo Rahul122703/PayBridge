@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { Home, UserPlus, Settings, Lock, FileText } from "lucide-react";
 import { FiMoon, FiSun } from "react-icons/fi";
-import { FaExchangeAlt } from "react-icons/fa"; // transaction icon
+import { FaExchangeAlt, FaCreditCard } from "react-icons/fa";
 
 const initialNavItems = [
   {
@@ -17,10 +17,16 @@ const initialNavItems = [
     isButton: false,
   },
   {
+    label: "Payment",
+    route: "/payments",
+    icon: FaCreditCard,
+    isButton: false,
+  },
+  {
     label: "Toggle Dark Mode",
     icon: FiMoon,
     isButton: true,
-    action: null, // will be set in component
+    action: null,
   },
 ];
 
@@ -33,30 +39,24 @@ const uiSlice = createSlice({
     themeColor: "#155DFC",
   },
   reducers: {
-    // ✅ Toggle Tailwind dark mode
     toggleDarkMode: (state) => {
       state.darkMode = !state.darkMode;
     },
 
-    // ✅ Toggle sidebar collapse
     toggleCollapse: (state) => {
       state.collapsed = !state.collapsed;
     },
 
-    // ✅ Replace nav items dynamically if needed
     setNavItems: (state, action) => {
       state.navItems = action.payload;
     },
   },
 });
 
-// ✅ Export actions
 export const { toggleDarkMode, toggleCollapse, setNavItems } = uiSlice.actions;
 
-// ✅ Export reducer
 export default uiSlice.reducer;
 
-// ✅ Selector for dark mode (used in App.jsx)
 export const selectDarkMode = (state) => state.ui.darkMode;
 
 // Optional selectors for sidebar and nav
