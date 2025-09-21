@@ -137,7 +137,7 @@ router.get("/callback", async (req, res) => {
     );
 
     // Frontend home page URL
-    const redirectUrl = "http://localhost:5173";
+    const redirectUrl = process.env.WEBSITE_URL;
 
     return res.send(`
       <html>
