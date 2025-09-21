@@ -7,7 +7,9 @@ export const fetchTransactions = createAsyncThunk(
   async ({ token, page = 1, limit = 5 }, { rejectWithValue }) => {
     try {
       const response = await axios.get(
-        `http://localhost:8080/transactions?page=${page}&limit=${limit}`,
+        `${
+          import.meta.env.VITE_API_URL
+        }/transactions?page=${page}&limit=${limit}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
