@@ -21,7 +21,7 @@ const SchoolPayPage = () => {
 
     try {
       const res = await axios.post(
-        `http://localhost:8080/payments/create-payment`,
+        `${import.meta.env.VITE_API_URL}/payments/create-payment`,
         {
           school_id: "65b0e6293e9f76a9694d84b4",
           amount: amount,
