@@ -1,112 +1,185 @@
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { selectUser } from "../features/auth/AuthSlice"; // adjust path if needed
+import { selectUser } from "../features/auth/AuthSlice";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { FaTrash, FaUpload, FaShareAlt } from "react-icons/fa";
 
 const Homepage = () => {
   const user = useSelector(selectUser);
-  const [users, setUsers] = useState([]);
+  const darkMode = useSelector((state) => state.ui.darkMode);
+  const [schools, setSchools] = useState([]);
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      if (!user || !user.token) {
-        console.warn("User or token not available");
-        return;
-      }
+    const fetchSchools = async () => {
+      if (!user?.token) return;
 
       try {
         const response = await axios.get(
           `${import.meta.env.VITE_API_URL}/users/school`,
-          {
-            headers: {
-              Authorization: `Bearer ${user.token}`,
-            },
-          }
+          { headers: { Authorization: `Bearer ${user.token}` } }
         );
 
         if (response.data.success) {
-          setUsers(response.data.data);
-          toast.success("Schools fetched successfully!");
+          setSchools(response.data.data);
         } else {
-          toast.error("Failed to fetch schools: " + response.data.message);
+          toast.error(response.data.message || "Failed to fetch schools");
         }
       } catch (err) {
-        console.error(
-          "Error fetching schools:",
-          err.response?.data || err.message
-        );
+        console.error("Error fetching schools:", err);
         toast.error("Failed to fetch schools");
       }
     };
 
-    fetchUsers();
+    fetchSchools();
   }, [user]);
 
-  const handleRemoveUser = async (userId) => {
-    if (!user || !user.token) return;
+  const handleRemoveSchool = async (id) => {
+    if (!user?.token) return;
+
     try {
       const response = await axios.delete(
-        `${import.meta.env.VITE_API_URL}/users/${userId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-          },
-        }
+        `${import.meta.env.VITE_API_URL}/users/${id}`,
+        { headers: { Authorization: `Bearer ${user.token}` } }
       );
 
       if (response.data.success) {
-        setUsers(users.filter((u) => u._id !== userId));
+        setSchools((prev) => prev.filter((s) => s._id !== id));
         toast.success("School removed successfully!");
       } else {
-        toast.error("Failed to remove school: " + response.data.message);
+        toast.error(response.data.message || "Failed to remove school");
       }
     } catch (err) {
-      console.error(
-        "Error removing school:",
-        err.response?.data || err.message
-      );
+      console.error("Error removing school:", err);
       toast.error("Failed to remove school");
     }
   };
 
   return (
-    <div className="flex flex-col w-full max-h-full overflow-auto transition-colors duration-300 bg-gray-50">
-      <div className="flex flex-1 flex-col items-center justify-start w-full p-4">
-        <h1 className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-center mb-6">
-          Registered Schools
-        </h1>
+    <div
+      className={`flex flex-col w-full min-h-screen p-4 transition-colors duration-300 ${
+        darkMode ? "bg-gray-900 text-white" : "bg-gray-50 text-gray-900"
+      }`}>
+      {/* Header */}
+      <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-6">
+        Registered Schools
+      </h1>
 
-        <div className="w-full max-w-4xl mb-6">
-          <div className="p-6 bg-blue-500 text-white rounded-2xl shadow-md flex justify-between items-center">
-            <div>
-              <h2 className="text-xl font-semibold">Total Schools</h2>
-              <p className="text-3xl font-bold">{users.length}</p>
-            </div>
-            <span className="text-5xl">🏫</span>
+      {/* Stats Card */}
+      <div className="w-full max-w-4xl mx-auto mb-8">
+        <div
+          className={`p-6 rounded-2xl shadow-lg flex justify-between items-center transition-colors duration-300 ${
+            darkMode ? "bg-gray-800 text-white" : "bg-blue-600 text-white"
+          }`}>
+          <div>
+            <h2 className="text-lg sm:text-xl font-semibold">Total Schools</h2>
+            <p className="text-2xl sm:text-3xl font-bold">{schools.length}</p>
           </div>
         </div>
+      </div>
 
-        <div className="w-full max-w-[70rem] grid grid-cols-1 md:grid-cols-2 gap-4">
-          {users.length === 0 ? (
-            <p className="text-center text-gray-500 w-full">No schools found</p>
+      {/* Table for Desktop */}
+      <div className="w-full max-w-6xl mx-auto">
+        <div
+          className={`hidden md:block overflow-x-auto shadow rounded-2xl transition-colors duration-300`}>
+          <table
+            className={`min-w-full rounded-2xl overflow-hidden transition-colors duration-300 ${
+              darkMode ? "bg-gray-800 text-white" : "bg-white text-gray-900"
+            }`}>
+            <thead
+              className={`transition-colors duration-300 ${
+                darkMode ? "bg-gray-700" : "bg-gray-100"
+              }`}>
+              <tr>
+                <th className="py-3 px-4 text-left font-semibold">#</th>
+                <th className="py-3 px-4 text-left font-semibold">Name</th>
+                <th className="py-3 px-4 text-left font-semibold">Email</th>
+                <th className="py-3 px-4 text-center font-semibold">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {schools.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan="4"
+                    className={`py-6 text-center transition-colors duration-300 ${
+                      darkMode ? "text-gray-300" : "text-gray-500"
+                    }`}>
+                    No schools found
+                  </td>
+                </tr>
+              ) : (
+                schools.map((school, idx) => (
+                  <tr
+                    key={school._id}
+                    className={`border-b transition-colors duration-300 hover:${
+                      darkMode ? "bg-gray-700" : "bg-gray-50"
+                    }`}>
+                    <td className="py-3 px-4">{idx + 1}</td>
+                    <td className="py-3 px-4 font-medium">{school.name}</td>
+                    <td
+                      className={`py-3 px-4 text-sm transition-colors duration-300 ${
+                        darkMode ? "text-gray-300" : "text-gray-600"
+                      }`}>
+                      {school.email}
+                    </td>
+                    <td className="py-3 px-4 flex justify-center space-x-3">
+                      <button className="p-2 rounded bg-blue-500 text-white hover:bg-blue-600">
+                        <FaUpload />
+                      </button>
+                      <button
+                        onClick={() => handleRemoveSchool(school._id)}
+                        className="p-2 rounded bg-red-500 text-white hover:bg-red-600">
+                        <FaTrash />
+                      </button>
+                      <button className="p-2 rounded bg-green-500 text-white hover:bg-green-600">
+                        <FaShareAlt />
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Mobile Cards */}
+        <div className="grid grid-cols-1 gap-4 md:hidden">
+          {schools.length === 0 ? (
+            <p
+              className={`text-center transition-colors duration-300 ${
+                darkMode ? "text-gray-300" : "text-gray-500"
+              }`}>
+              No schools found
+            </p>
           ) : (
-            users.map((school, idx) => (
+            schools.map((school, idx) => (
               <div
                 key={school._id}
-                className="p-4 bg-white border rounded-xl shadow hover:shadow-lg transition flex flex-col space-y-3">
-                <div className="flex justify-between items-center">
+                className={`p-4 rounded-xl shadow-md hover:shadow-lg transition-colors duration-300 ${
+                  darkMode ? "bg-gray-800 text-white" : "bg-white text-gray-900"
+                }`}>
+                <div className="flex justify-between items-center mb-2">
                   <h3 className="text-lg font-semibold">{school.name}</h3>
-                  <span className="text-sm text-gray-500">#{idx + 1}</span>
+                  <span
+                    className={`text-sm transition-colors duration-300 ${
+                      darkMode ? "text-gray-400" : "text-gray-500"
+                    }`}>
+                    #{idx + 1}
+                  </span>
                 </div>
-                <p className="text-sm text-gray-600">{school.email}</p>
+                <p
+                  className={`text-sm mb-3 transition-colors duration-300 ${
+                    darkMode ? "text-gray-300" : "text-gray-600"
+                  }`}>
+                  {school.email}
+                </p>
                 <div className="flex justify-end space-x-2">
                   <button className="p-2 rounded bg-blue-500 text-white hover:bg-blue-600">
                     <FaUpload />
                   </button>
                   <button
-                    onClick={() => handleRemoveUser(school._id)}
+                    onClick={() => handleRemoveSchool(school._id)}
                     className="p-2 rounded bg-red-500 text-white hover:bg-red-600">
                     <FaTrash />
                   </button>

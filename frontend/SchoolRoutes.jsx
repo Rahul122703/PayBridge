@@ -13,10 +13,7 @@ const DashboardNotFound = () => (
 const SchoolRoutes = () => (
   <Routes>
     <Route path="/" element={<DashboardLayout />}>
-      <Route index element={<HomePage />} />
-      <Route path="classes" element={<h1>School Classes</h1>} />
-      <Route path="dashboard" element={<h1>School Dashboard</h1>} />
-      <Route path="payments" element={<SchoolPayPage />} />
+      <Route index element={<SchoolPayPage />} />
       <Route path="*" element={<DashboardNotFound />} />
     </Route>
   </Routes>

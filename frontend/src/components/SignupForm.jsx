@@ -5,7 +5,6 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setActiveTab } from "../features/auth/AuthSlice";
 
-
 const signupSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Invalid email"),
@@ -16,7 +15,7 @@ const signupSchema = z.object({
 });
 
 // const BACKEND_URL = import.meta.env.VITE_API_URL; // !!!!!!!!!! WARNING : UNCOMMENT THIS AND THEN RUN WHEN RUNNING ON LOCALHOST !!!!!!!!!!!
-const BACKEND_URL = "https://paybridge-39eo.onrender.com"; // !!!!!!!!!! WARNING : COMMENT THIS AND THEN RUN WHEN NOT RUNNING ON LOCALHOST !!!!!!!!!!!
+const BACKEND_URL = import.meta.env.VITE_API_URL; // !!!!!!!!!! WARNING : COMMENT THIS AND THEN RUN WHEN NOT RUNNING ON LOCALHOST !!!!!!!!!!!
 
 const SignupForm = () => {
   const [name, setName] = useState("");
@@ -50,7 +49,6 @@ const SignupForm = () => {
 
   return (
     <form className="space-y-5" onSubmit={handleSignup}>
-   
       <div>
         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
           Name
@@ -65,7 +63,6 @@ const SignupForm = () => {
                      focus:ring-2 focus:ring-blue-500 outline-none"
         />
       </div>
-
 
       <div>
         <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">

@@ -1,20 +1,36 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import NavList from "./NavList";
 import LogoutButton from "./LogoutButton";
-import { toggleCollapse } from "../features/ui/uISlice";
+import {
+  toggleCollapse,
+  selectNavItems,
+  selectDarkMode,
+  selectThemeColor,
+} from "../features/ui/uISlice";
+import { selectCollapsed } from "../features/ui/uISlice";
+import { selectUser } from "../features/auth/AuthSlice";
+import { updateNavItemsByRole } from "../features/ui/uISlice";
 
 export default function SidebarDesktop() {
   const location = useLocation();
   const dispatch = useDispatch();
-  const collapsed = useSelector((state) => state.ui.collapsed);
-  const navItemsFromState = useSelector((state) => state.ui.navItems);
-  const darkMode = useSelector((state) => state.ui.darkMode);
+  const collapsed = useSelector(selectCollapsed);
+  const navItemsFromState = useSelector(selectNavItems);
+  const darkMode = useSelector(selectDarkMode);
+  const themeColor = useSelector(selectThemeColor);
+  const user = useSelector(selectUser);
 
-  const themeColor = useSelector((state) => state.ui.themeColor);
+  // Update nav items based on user role
+  useEffect(() => {
+    if (user?.role) {
+      dispatch(updateNavItemsByRole(user.role));
+    }
+  }, [user, dispatch]);
 
+  // Prepend the collapse/expand button
   const navItems = [
     {
       label: collapsed ? "Expand Sidebar" : "Collapse Sidebar",
@@ -27,13 +43,9 @@ export default function SidebarDesktop() {
 
   return (
     <div
-      className={`hidden md:flex h-screen pt-4 pl-4 pb-4 flex-col justify-between transition-all duration-300 border border-none
+      className={`hidden md:flex h-screen pt-4 pl-4 pb-4 flex-col justify-between transition-all duration-300
         ${collapsed ? "w-20" : "w-60"} 
-        ${
-          darkMode
-            ? "bg-gray-900 text-gray-200"
-            : ` bg-[${themeColor}] text-white`
-        }`}
+        ${darkMode ? "bg-gray-900 text-gray-200" : "text-white"}`}
       style={!darkMode ? { backgroundColor: themeColor } : {}}>
       <NavList
         items={navItems}

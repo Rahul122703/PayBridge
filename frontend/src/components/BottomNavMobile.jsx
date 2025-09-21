@@ -1,14 +1,29 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useLocation, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { toggleDarkMode } from "../features/ui/uISlice";
+import {
+  toggleDarkMode,
+  updateNavItemsByRole,
+  selectNavItems,
+  selectDarkMode,
+  selectThemeColor,
+} from "../features/ui/uISlice";
+import { selectUser } from "../features/auth/AuthSlice";
 
 export default function BottomNavMobile() {
   const location = useLocation();
-  const navItems = useSelector((state) => state.ui.navItems);
-  const darkMode = useSelector((state) => state.ui.darkMode);
   const dispatch = useDispatch();
-  const themeColor = useSelector((state) => state.ui.themeColor);
+  const user = useSelector(selectUser);
+  const navItemsFromState = useSelector(selectNavItems);
+  const darkMode = useSelector(selectDarkMode);
+  const themeColor = useSelector(selectThemeColor);
+
+  // Update nav items based on user role
+  useEffect(() => {
+    if (user?.role) {
+      dispatch(updateNavItemsByRole(user.role));
+    }
+  }, [user, dispatch]);
 
   return (
     <div
@@ -19,11 +34,11 @@ export default function BottomNavMobile() {
             : "border-blue-700 text-white"
         }`}
       style={!darkMode ? { backgroundColor: themeColor } : {}}>
-      {navItems.map((item, idx) => {
+      {navItemsFromState.map((item, idx) => {
         const isActive = location.pathname === item.route;
         const Icon = item.icon;
 
-      
+        // Handle toggle dark mode button
         if (item.isButton && item.label.toLowerCase().includes("dark")) {
           return (
             <button
@@ -41,7 +56,7 @@ export default function BottomNavMobile() {
           );
         }
 
-    
+        // Normal nav link
         return (
           <Link
             key={idx}

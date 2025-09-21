@@ -136,13 +136,33 @@ router.get("/callback", async (req, res) => {
       { upsert: true, new: true }
     );
 
+    // Frontend home page URL
+    const redirectUrl = "http://localhost:5173";
+
     return res.send(`
       <html>
-        <head><title>Payment Status</title></head>
-        <body style="font-family: sans-serif; text-align: center; margin-top: 50px;">
-          <h1>Payment ${status}</h1>
-          <p>Order ID: ${EdvironCollectRequestId}</p>
-          <p>${reason || ""}</p>
+        <head>
+          <title>Payment Status</title>
+          <meta http-equiv="refresh" content="5;url=${redirectUrl}" />
+          <style>
+            body { font-family: sans-serif; text-align: center; margin-top: 50px; }
+            .status { font-size: 2rem; margin-bottom: 20px; }
+            .info { font-size: 1.2rem; color: gray; }
+          </style>
+        </head>
+        <body>
+          <div class="status">Payment ${status}</div>
+          <div class="info">Order ID: ${EdvironCollectRequestId}</div>
+          <div class="info">${reason || ""}</div>
+          <p>Redirecting to home page in <span id="countdown">5</span> seconds...</p>
+          <script>
+            let countdown = 5;
+            const interval = setInterval(() => {
+              countdown--;
+              document.getElementById('countdown').innerText = countdown;
+              if(countdown <= 0) clearInterval(interval);
+            }, 1000);
+          </script>
         </body>
       </html>
     `);
@@ -155,18 +175,31 @@ router.get("/callback", async (req, res) => {
 router.get("/transaction-status/:collect_id", verifyToken, async (req, res) => {
   try {
     const { collect_id } = req.params;
-    if (!collect_id)
+    if (!collect_id) {
       return res.status(400).json({ message: "collect_id required" });
+    }
 
+    // Prepare payload and sign
     const payload = {
       school_id: process.env.SCHOOL_ID,
       collect_request_id: String(collect_id),
     };
-
     const sign = jwt.sign(payload, process.env.PG_SECRET);
 
+    // ✅ Full API URL
     const url = `https://dev-vanilla.edviron.com/erp/collect-request/${collect_id}?school_id=${process.env.SCHOOL_ID}&sign=${sign}`;
-    const response = await axios.get(url, { timeout: 10000 });
+
+    // ✅ Bearer token (e.g. from .env or dynamically generated)
+    const bearerToken = process.env.PG_BEARER_TOKEN;
+
+    // ✅ Request with proper headers
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${bearerToken}`, // <-- Bearer token here
+        "Content-Type": "application/json",
+      },
+      timeout: 10000,
+    });
 
     return res.json(response.data);
   } catch (err) {
@@ -180,5 +213,7 @@ router.get("/transaction-status/:collect_id", verifyToken, async (req, res) => {
     });
   }
 });
+
+module.exports = router;
 
 module.exports = router;

@@ -6,8 +6,8 @@ import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 import { login } from "../features/auth/AuthSlice";
- // !!!!!!!!!! WARNING : UNCOMMENT THIS AND THEN RUN WHEN RUNNING ON LOCALHOST !!!!!!!!!!!
-const BACKEND_URL = "https://paybridge-39eo.onrender.com"; // !!!!!!!!!! WARNING : COMMENT THIS AND THEN RUN WHEN NOT RUNNING ON LOCALHOST !!!!!!!!!!!
+// !!!!!!!!!! WARNING : UNCOMMENT THIS AND THEN RUN WHEN RUNNING ON LOCALHOST !!!!!!!!!!!
+const BACKEND_URL = import.meta.env.VITE_API_URL; // !!!!!!!!!! WARNING : COMMENT THIS AND THEN RUN WHEN NOT RUNNING ON LOCALHOST !!!!!!!!!!!
 
 const loginSchema = z.object({
   email: z.string().email("Invalid email"),
@@ -20,7 +20,6 @@ const LoginForm = () => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
 
   useEffect(() => {
     const storedAuth = JSON.parse(localStorage.getItem("authUser"));
@@ -55,7 +54,7 @@ const LoginForm = () => {
           })
         );
 
-        navigate("/home", { replace: true });
+        navigate("/", { replace: true });
       }
     } catch (err) {
       toast.error(err.response?.data?.message || "Login failed");

@@ -1,27 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { Home, UserPlus, Settings, Lock, FileText } from "lucide-react";
-import { FiMoon, FiSun } from "react-icons/fi";
+import { Home } from "lucide-react";
+import { FiMoon } from "react-icons/fi";
 import { FaExchangeAlt, FaCreditCard } from "react-icons/fa";
 
 const initialNavItems = [
-  {
-    label: "Home",
-    route: "/home",
-    icon: Home,
-    isButton: false,
-  },
-  {
-    label: "Transactions",
-    route: "/transactions",
-    icon: FaExchangeAlt,
-    isButton: false,
-  },
-  {
-    label: "Payment",
-    route: "/payments",
-    icon: FaCreditCard,
-    isButton: false,
-  },
   {
     label: "Toggle Dark Mode",
     icon: FiMoon,
@@ -50,16 +32,73 @@ const uiSlice = createSlice({
     setNavItems: (state, action) => {
       state.navItems = action.payload;
     },
+
+    updateNavItemsByRole: (state, action) => {
+      const role = action.payload;
+
+      let newNavItems = [
+        {
+          label: "Toggle Dark Mode",
+          icon: FiMoon,
+          isButton: true,
+          action: null,
+        },
+      ];
+
+      if (role === "admin") {
+        newNavItems = [
+          {
+            label: "Home",
+            route: "/home",
+            icon: Home,
+            isButton: false,
+          },
+          {
+            label: "Transactions",
+            route: "/transactions",
+            icon: FaExchangeAlt,
+            isButton: false,
+          },
+          {
+            label: "Toggle Dark Mode",
+            icon: FiMoon,
+            isButton: true,
+            action: null,
+          },
+        ];
+      } else if (role === "school") {
+        newNavItems = [
+          {
+            label: "Payment",
+            route: "/payments",
+            icon: FaCreditCard,
+            isButton: false,
+          },
+          {
+            label: "Toggle Dark Mode",
+            icon: FiMoon,
+            isButton: true,
+            action: null,
+          },
+        ];
+      }
+
+      state.navItems = newNavItems;
+    },
   },
 });
 
-export const { toggleDarkMode, toggleCollapse, setNavItems } = uiSlice.actions;
+export const {
+  toggleDarkMode,
+  toggleCollapse,
+  setNavItems,
+  updateNavItemsByRole,
+} = uiSlice.actions;
 
 export default uiSlice.reducer;
 
+// Selectors
 export const selectDarkMode = (state) => state.ui.darkMode;
-
-// Optional selectors for sidebar and nav
 export const selectCollapsed = (state) => state.ui.collapsed;
 export const selectNavItems = (state) => state.ui.navItems;
 export const selectThemeColor = (state) => state.ui.themeColor;

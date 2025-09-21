@@ -6,90 +6,46 @@ const router = express.Router();
 
 /**
  * GET /transactions
- * Query params: page, limit, sort, order, status, school_id, from, to
- * Returns aggregated data combining orders + order_status
+ * Query params: page, limit, sort, order, school_id
+ * Returns data directly from Order collection
  */
 router.get("/", verifyToken, async (req, res) => {
   try {
     const {
       page = 1,
       limit = 20,
-      sort = "payment_time",
+      sort = "createdAt",
       order = "desc",
-      status,
       school_id,
-      from,
-      to,
     } = req.query;
 
     const skip = (Number(page) - 1) * Number(limit);
 
-    // Build $match filters for aggregation
-    const match = {};
-    if (school_id) match["order.school_id"] = String(school_id);
-    if (status) match["order_status.status"] = String(status);
-    if (from || to) {
-      match["order_status.payment_time"] = {};
-      if (from) match["order_status.payment_time"].$gte = new Date(from);
-      if (to) match["order_status.payment_time"].$lte = new Date(to);
-    }
+    // Build filter
+    const filter = {};
+    if (school_id) filter.school_id = String(school_id);
 
-    const pipeline = [
-      {
-        $lookup: {
-          from: "orderstatuses",
-          localField: "collect_id",
-          foreignField: "collect_id",
-          as: "order_status",
-        },
-      },
-      { $unwind: { path: "$order_status", preserveNullAndEmptyArrays: true } },
-      { $match: match },
-      {
-        $project: {
-          collect_id: 1,
-          school_id: 1,
-          gateway: "$gateway_name",
-          order_amount: 1,
-          transaction_amount: "$order_status.transaction_amount",
-          status: "$order_status.status",
-          custom_order_id: "$collect_id",
-          payment_time: "$order_status.payment_time",
-        },
-      },
-      { $sort: { [sort]: order === "asc" ? 1 : -1 } },
-      { $skip: skip },
-      { $limit: Number(limit) },
-    ];
+    // Fetch data from Order collection
+    const data = await Order.find(filter)
+      .sort({ [sort]: order === "asc" ? 1 : -1 })
+      .skip(skip)
+      .limit(Number(limit))
+      .select("collect_id school_id gateway_name order_amount createdAt");
 
-    const data = await Order.aggregate(pipeline);
-
-    // total count with same filters
-    const countPipeline = [
-      {
-        $lookup: {
-          from: "orderstatuses",
-          localField: "collect_id",
-          foreignField: "collect_id",
-          as: "order_status",
-        },
-      },
-      { $unwind: { path: "$order_status", preserveNullAndEmptyArrays: true } },
-      { $match: match },
-      { $count: "count" },
-    ];
-
-    const countRes = await Order.aggregate(countPipeline);
-    const total = countRes[0]?.count || 0;
+    // total count
+    const total = await Order.countDocuments(filter);
 
     return res.json({ total, page: Number(page), limit: Number(limit), data });
   } catch (err) {
     console.error("transactions fetch error:", err);
-    return res
-      .status(500)
-      .json({ message: "Failed to fetch transactions", error: err.message });
+    return res.status(500).json({
+      message: "Failed to fetch transactions",
+      error: err.message,
+    });
   }
 });
+
+module.exports = router;
 
 /**
  * GET /transactions/school/:schoolId

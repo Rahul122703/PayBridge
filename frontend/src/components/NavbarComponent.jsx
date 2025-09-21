@@ -9,7 +9,7 @@ const NavbarComponent = () => {
     <nav className="sticky top-0 bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100 shadow-md transition">
       <div className="flex items-center justify-between p-4">
         <h1 className="text-2xl font-bold">
-          <Link to="/">PayBridge</Link>
+          <Link to="/">EdvironPay</Link>
         </h1>
         <button
           className="sm:hidden focus:outline-none"
