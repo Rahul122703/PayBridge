@@ -4,11 +4,6 @@ const Order = require("../Models/Order");
 
 const router = express.Router();
 
-/**
- * GET /transactions
- * Query params: page, limit, sort, order, school_id
- * Returns data directly from Order collection
- */
 router.get("/", verifyToken, async (req, res) => {
   try {
     const {
@@ -47,9 +42,6 @@ router.get("/", verifyToken, async (req, res) => {
 
 module.exports = router;
 
-/**
- * GET /transactions/school/:schoolId
- */
 router.get("/school/:schoolId", verifyToken, async (req, res) => {
   try {
     const { schoolId } = req.params;

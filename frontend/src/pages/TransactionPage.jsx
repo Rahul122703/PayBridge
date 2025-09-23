@@ -51,7 +51,6 @@ const TransactionPage = () => {
         Transactions
       </h1>
 
-      {/* Totals */}
       <div className="flex flex-col md:flex-row justify-center items-center gap-4 mb-6">
         <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded shadow w-full md:w-auto text-center">
           <p className="text-sm text-gray-500 dark:text-gray-400">
@@ -73,7 +72,6 @@ const TransactionPage = () => {
         </div>
       </div>
 
-      {/* Desktop / Tablet Table */}
       <div className="hidden md:block shadow-md rounded-lg overflow-hidden">
         <table className="w-full min-w-full table-auto border-collapse">
           <thead className="bg-gray-200 dark:bg-gray-800 text-gray-700 dark:text-gray-200 sticky top-0">
@@ -128,7 +126,6 @@ const TransactionPage = () => {
         </table>
       </div>
 
-      {/* Mobile Cards */}
       <div className="grid grid-cols-1 gap-4 md:hidden p-2">
         {transactions.length === 0 ? (
           <p className="text-center text-gray-500">No transactions found</p>
@@ -178,7 +175,6 @@ const TransactionPage = () => {
         )}
       </div>
 
-      {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex flex-wrap justify-center items-center mt-6 gap-2">
           <button

@@ -60,12 +60,10 @@ const Homepage = () => {
       className={`flex flex-col w-full min-h-screen p-4 transition-colors duration-300 ${
         darkMode ? "bg-gray-900 text-white" : "bg-gray-50 text-gray-900"
       }`}>
-      {/* Header */}
       <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center mb-6">
         Registered Schools
       </h1>
 
-      {/* Stats Card */}
       <div className="w-full max-w-4xl mx-auto mb-8">
         <div
           className={`p-6 rounded-2xl shadow-lg flex justify-between items-center transition-colors duration-300 ${
@@ -78,7 +76,6 @@ const Homepage = () => {
         </div>
       </div>
 
-      {/* Table for Desktop */}
       <div className="w-full max-w-6xl mx-auto">
         <div
           className={`hidden md:block overflow-x-auto shadow rounded-2xl transition-colors duration-300`}>
