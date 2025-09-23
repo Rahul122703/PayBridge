@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
-// Async thunk to fetch transactions
 export const fetchTransactions = createAsyncThunk(
   "transactions/fetchTransactions",
   async ({ token, page = 1, limit = 5 }, { rejectWithValue }) => {
@@ -14,7 +13,6 @@ export const fetchTransactions = createAsyncThunk(
       );
 
       if (response.data && Array.isArray(response.data.data)) {
-        // calculate totals
         const totalTransactions = response.data.total;
         const totalOrderAmount = response.data.data.reduce(
           (sum, tx) => sum + (tx.order_amount || 0),

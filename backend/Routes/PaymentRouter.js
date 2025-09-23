@@ -136,7 +136,6 @@ router.get("/callback", async (req, res) => {
       { upsert: true, new: true }
     );
 
-    // Frontend home page URL
     const redirectUrl = process.env.WEBSITE_URL;
 
     return res.send(`
@@ -179,23 +178,21 @@ router.get("/transaction-status/:collect_id", verifyToken, async (req, res) => {
       return res.status(400).json({ message: "collect_id required" });
     }
 
-    // Prepare payload and sign
     const payload = {
       school_id: process.env.SCHOOL_ID,
       collect_request_id: String(collect_id),
     };
     const sign = jwt.sign(payload, process.env.PG_SECRET);
 
-    // ✅ Full API URL
+ 
     const url = `https://dev-vanilla.edviron.com/erp/collect-request/${collect_id}?school_id=${process.env.SCHOOL_ID}&sign=${sign}`;
 
-    // ✅ Bearer token (e.g. from .env or dynamically generated)
+
     const bearerToken = process.env.PG_BEARER_TOKEN;
 
-    // ✅ Request with proper headers
     const response = await axios.get(url, {
       headers: {
-        Authorization: `Bearer ${bearerToken}`, // <-- Bearer token here
+        Authorization: `Bearer ${bearerToken}`, 
         "Content-Type": "application/json",
       },
       timeout: 10000,

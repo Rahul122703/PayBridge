@@ -96,8 +96,6 @@ export const {
 } = uiSlice.actions;
 
 export default uiSlice.reducer;
-
-// Selectors
 export const selectDarkMode = (state) => state.ui.darkMode;
 export const selectCollapsed = (state) => state.ui.collapsed;
 export const selectNavItems = (state) => state.ui.navItems;

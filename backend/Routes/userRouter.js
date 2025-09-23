@@ -4,11 +4,9 @@ const verifyToken = require("../Middlewares/verifyToken");
 
 const router = express.Router();
 
-// GET /users/school
-// Return all users with role 'school'
 router.get("/school", verifyToken, async (req, res) => {
   try {
-    const users = await UserModel.find({ role: "school" }).select("-password"); // Exclude password
+    const users = await UserModel.find({ role: "school" }).select("-password"); 
     res.status(200).json({
       success: true,
       data: users,

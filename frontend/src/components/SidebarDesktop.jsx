@@ -23,14 +23,12 @@ export default function SidebarDesktop() {
   const themeColor = useSelector(selectThemeColor);
   const user = useSelector(selectUser);
 
-  // Update nav items based on user role
   useEffect(() => {
     if (user?.role) {
       dispatch(updateNavItemsByRole(user.role));
     }
   }, [user, dispatch]);
 
-  // Prepend the collapse/expand button
   const navItems = [
     {
       label: collapsed ? "Expand Sidebar" : "Collapse Sidebar",

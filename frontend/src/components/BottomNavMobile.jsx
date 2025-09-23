@@ -18,7 +18,7 @@ export default function BottomNavMobile() {
   const darkMode = useSelector(selectDarkMode);
   const themeColor = useSelector(selectThemeColor);
 
-  // Update nav items based on user role
+ 
   useEffect(() => {
     if (user?.role) {
       dispatch(updateNavItemsByRole(user.role));
@@ -38,7 +38,6 @@ export default function BottomNavMobile() {
         const isActive = location.pathname === item.route;
         const Icon = item.icon;
 
-        // Handle toggle dark mode button
         if (item.isButton && item.label.toLowerCase().includes("dark")) {
           return (
             <button
@@ -56,7 +55,6 @@ export default function BottomNavMobile() {
           );
         }
 
-        // Normal nav link
         return (
           <Link
             key={idx}

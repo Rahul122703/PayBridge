@@ -16,18 +16,15 @@ router.get("/", verifyToken, async (req, res) => {
 
     const skip = (Number(page) - 1) * Number(limit);
 
-    // Build filter
     const filter = {};
     if (school_id) filter.school_id = String(school_id);
 
-    // Fetch data from Order collection
     const data = await Order.find(filter)
       .sort({ [sort]: order === "asc" ? 1 : -1 })
       .skip(skip)
       .limit(Number(limit))
       .select("collect_id school_id gateway_name order_amount createdAt");
 
-    // total count
     const total = await Order.countDocuments(filter);
 
     return res.json({ total, page: Number(page), limit: Number(limit), data });
