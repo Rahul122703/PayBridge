@@ -27,7 +27,7 @@ const SchoolPayPage = () => {
         {
           school_id: "65b0e6293e9f76a9694d84b4",
           amount: amount,
-          callback_url: "https://paybridge-39eo.onrender.com/payments/callback",
+          callback_url: "https://paybridge-pkiq.onrender.com/payments/callback",
           student_info: {
             name: studentName,
             id: studentId,
